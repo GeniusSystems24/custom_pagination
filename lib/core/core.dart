@@ -12,6 +12,9 @@ part 'bloc/pagination_listeners.dart';
 part 'bloc/pagination_state.dart';
 part 'controller/controller.dart';
 
+// Export error handling utilities
+export 'error_handling.dart';
+
 typedef WhereChecker<T> = bool Function(T item);
 typedef CompareBy<T> = int Function(T a, T b);
 typedef OnInsertionCallback<T> = void Function(List<T> items);

@@ -16,6 +16,7 @@ class SinglePaginationCubit<T>
     VoidCallback? onClear,
     int maxPagesInMemory = 5,
     Logger? logger,
+    RetryConfig? retryConfig,
   }) : _dataProvider = dataProvider,
        _streamProvider = streamProvider,
        _listBuilder = listBuilder,
@@ -23,6 +24,7 @@ class SinglePaginationCubit<T>
        _onClear = onClear,
        _maxPagesInMemory = maxPagesInMemory,
        _logger = logger ?? Logger(),
+       _retryHandler = retryConfig != null ? RetryHandler(retryConfig) : null,
        initialRequest = request,
        _currentRequest = request,
        super(SinglePaginationInitial<T>());
@@ -34,6 +36,7 @@ class SinglePaginationCubit<T>
   final VoidCallback? _onClear;
   final int _maxPagesInMemory;
   final Logger _logger;
+  final RetryHandler? _retryHandler;
 
   @override
   final PaginationRequest initialRequest;
@@ -115,7 +118,16 @@ class SinglePaginationCubit<T>
     final token = ++_fetchToken;
 
     try {
-      final pageItems = await _dataProvider(request);
+      // Use retry handler if available
+      final pageItems = _retryHandler != null
+          ? await _retryHandler!.execute(
+              () => _dataProvider(request),
+              onRetry: (attempt, error) {
+                _logger.w('Retry attempt $attempt after error: $error');
+              },
+            )
+          : await _dataProvider(request);
+
       if (token != _fetchToken) return;
 
       didFetch = true;

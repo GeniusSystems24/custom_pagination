@@ -45,3 +45,6 @@ export 'data/data.dart';
 
 // Single pagination
 export 'single_pagination/pagination.dart';
+
+// Dual pagination (grouped)
+export 'dual_pagination/pagination.dart';
