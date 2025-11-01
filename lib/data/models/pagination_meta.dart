@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+part of '../data.dart';
 
 /// Metadata describing the state of a paginated response.
 ///

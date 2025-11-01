@@ -12,9 +12,6 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 import '../core/core.dart';
 import '../data/data.dart';
 
-export '../data/models/pagination_meta.dart';
-export '../data/models/pagination_request.dart';
-
 part 'bloc/pagination_cubit.dart';
 part 'bloc/pagination_listeners.dart';
 part 'bloc/pagination_state.dart';

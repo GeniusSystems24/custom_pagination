@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+part of '../data.dart';
 
 /// Lightweight request descriptor used by the pagination cubit.
 ///
