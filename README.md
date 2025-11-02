@@ -357,6 +357,64 @@ The example app includes:
 - **GridView**: Product grid with pagination
 - **Retry Mechanism**: Demonstrates automatic retry on network errors
 - **Filter & Search**: Real-time filtering and search with pagination
+- **Single Stream**: Real-time updates from a single data stream
+- **Multi Stream**: Multiple streams with different update rates
+
+## 📡 Stream Support
+
+The library supports real-time updates through streams. Use `streamProvider` to receive live data updates:
+
+### Single Stream Example
+
+```dart
+SinglePagination<Product>(
+  request: PaginationRequest(page: 1, pageSize: 20),
+  dataProvider: (request) => apiService.fetchProducts(request),
+  streamProvider: (request) => apiService.productsStream(request),
+  itemBuilder: (context, items, index) {
+    return ProductCard(items[index]);
+  },
+)
+```
+
+The stream automatically updates the list when new data arrives. Perfect for:
+- Live price updates
+- Real-time inventory changes
+- Chat messages
+- Live scores
+- Stock tickers
+
+### Multiple Streams Example
+
+You can switch between different streams dynamically:
+
+```dart
+class MultiStreamScreen extends StatefulWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SinglePagination<Product>(
+      key: ValueKey(selectedStream), // Force rebuild on stream change
+      request: PaginationRequest(page: 1, pageSize: 20),
+      dataProvider: (request) => getDataProvider(request),
+      streamProvider: (request) => getStreamProvider(request),
+      itemBuilder: (context, items, index) {
+        return ProductCard(items[index]);
+      },
+    );
+  }
+
+  Stream<List<Product>> getStreamProvider(PaginationRequest request) {
+    switch (selectedStream) {
+      case StreamType.regular:
+        return apiService.regularProductsStream(request);
+      case StreamType.featured:
+        return apiService.featuredProductsStream(request);
+      case StreamType.sale:
+        return apiService.saleProductsStream(request);
+    }
+  }
+}
+```
 
 ## 🔁 Retry Mechanism
 

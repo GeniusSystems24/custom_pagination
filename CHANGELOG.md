@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+#### Stream Examples 📡
+- **Single Stream Example**: Real-time product list with live price updates
+  - Demonstrates `streamProvider` usage
+  - Products update every 3 seconds
+  - Shows live price changes
+  - Visual indicators for streaming data
+
+- **Multi Stream Example**: Multiple streams with different update rates
+  - Three stream sources: Regular, Featured, and Sale products
+  - Different update intervals (5s, 4s, 3s respectively)
+  - Tab navigation between streams
+  - Dynamic stream switching
+  - Color-coded badges for stream types
+
+- **Enhanced MockApiService**:
+  - Added `productsStream()` - single stream with 3-second updates
+  - Added `regularProductsStream()` - 5-second update interval
+  - Added `featuredProductsStream()` - 4-second update interval
+  - Added `saleProductsStream()` - 3-second update interval
+  - All streams simulate real-time price changes
+
+- **Documentation Updates**:
+  - Added "📡 Stream Support" section to README
+  - Single stream usage example
+  - Multiple streams usage example
+  - Use cases for streams
+  - Updated example app list
+
+### Enhanced
+- Home screen now includes "Stream Examples" section
+- Stream examples have visual indicators (badges, icons)
+- Better visual distinction between static and streaming data
+
 ## [0.0.5] - 2025-11-02
 
 ### Removed

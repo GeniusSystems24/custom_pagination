@@ -3,6 +3,8 @@ import 'single_pagination/basic_listview_screen.dart';
 import 'single_pagination/gridview_screen.dart';
 import 'single_pagination/retry_demo_screen.dart';
 import 'single_pagination/filter_search_screen.dart';
+import 'single_pagination/single_stream_screen.dart';
+import 'single_pagination/multi_stream_screen.dart';
 
 /// Home screen with navigation to all example screens
 class HomeScreen extends StatelessWidget {
@@ -53,6 +55,26 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.search,
             color: Colors.purple,
             onTap: () => _navigate(context, const FilterSearchScreen()),
+          ),
+          const SizedBox(height: 32),
+          _buildHeader('Stream Examples'),
+          const SizedBox(height: 16),
+          _buildExampleCard(
+            context,
+            title: 'Single Stream',
+            description: 'Real-time updates from a single data stream',
+            icon: Icons.stream,
+            color: Colors.cyan,
+            onTap: () => _navigate(context, const SingleStreamScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Multi Stream',
+            description: 'Multiple streams with different update rates',
+            icon: Icons.multiline_chart,
+            color: Colors.indigo,
+            onTap: () => _navigate(context, const MultiStreamScreen()),
           ),
         ],
       ),
