@@ -1,24 +1,17 @@
 part of '../pagination.dart';
 
-typedef PaginationDataProvider<T> =
-    Future<List<T>> Function(PaginationRequest request);
-typedef PaginationStreamProvider<T> =
-    Stream<List<T>> Function(PaginationRequest request);
-
 class SinglePaginationCubit<T>
     extends IPaginationListCubit<T, SinglePaginationState<T>> {
   SinglePaginationCubit({
     required PaginationRequest request,
-    required PaginationDataProvider<T> dataProvider,
-    PaginationStreamProvider<T>? streamProvider,
+    required PaginationProvider<T> provider,
     ListBuilder<T>? listBuilder,
     OnInsertionCallback<T>? onInsertionCallback,
     VoidCallback? onClear,
     int maxPagesInMemory = 5,
     Logger? logger,
     RetryConfig? retryConfig,
-  }) : _dataProvider = dataProvider,
-       _streamProvider = streamProvider,
+  }) : _provider = provider,
        _listBuilder = listBuilder,
        _onInsertionCallback = onInsertionCallback,
        _onClear = onClear,
@@ -29,8 +22,7 @@ class SinglePaginationCubit<T>
        _currentRequest = request,
        super(SinglePaginationInitial<T>());
 
-  final PaginationDataProvider<T> _dataProvider;
-  final PaginationStreamProvider<T>? _streamProvider;
+  final PaginationProvider<T> _provider;
   final ListBuilder<T>? _listBuilder;
   final OnInsertionCallback<T>? _onInsertionCallback;
   final VoidCallback? _onClear;
@@ -118,15 +110,18 @@ class SinglePaginationCubit<T>
     final token = ++_fetchToken;
 
     try {
-      // Use retry handler if available
-      final pageItems = _retryHandler != null
-          ? await _retryHandler!.execute(
-              () => _dataProvider(request),
-              onRetry: (attempt, error) {
-                _logger.w('Retry attempt $attempt after error: $error');
-              },
-            )
-          : await _dataProvider(request);
+      // Fetch data based on provider type
+      final pageItems = await switch (_provider) {
+        FuturePaginationProvider<T>(:final dataProvider) => _retryHandler != null
+            ? _retryHandler!.execute(
+                () => dataProvider(request),
+                onRetry: (attempt, error) {
+                  _logger.w('Retry attempt $attempt after error: $error');
+                },
+              )
+            : dataProvider(request),
+        StreamPaginationProvider<T>(:final streamProvider) => streamProvider(request).first,
+      };
 
       if (token != _fetchToken) return;
 
@@ -166,9 +161,10 @@ class SinglePaginationCubit<T>
         ),
       );
 
-      final provider = _streamProvider;
-      if (provider != null && reset) {
-        _attachStream(provider(request), request);
+      // Attach stream if it's a stream provider and this is initial load
+      if (_provider is StreamPaginationProvider<T> && reset) {
+        final streamProvider = _provider as StreamPaginationProvider<T>;
+        _attachStream(streamProvider.streamProvider(request), request);
       }
     } on Exception catch (error, stackTrace) {
       _logger.e(

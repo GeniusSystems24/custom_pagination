@@ -131,8 +131,9 @@ class _MultiStreamScreenState extends State<MultiStreamScreen> {
     return SinglePagination<Product>(
       key: ValueKey(_selectedTabIndex), // Force rebuild when tab changes
       request: const PaginationRequest(page: 1, pageSize: 15),
-      dataProvider: (request) => _getDataProvider(request),
-      streamProvider: (request) => _getStreamProvider(request),
+      provider: PaginationProvider.stream(
+        (request) => _getStreamProvider(request),
+      ),
       itemBuilderType: PaginateBuilderType.listView,
       itemBuilder: (context, items, index) {
         final product = items[index];
@@ -188,19 +189,6 @@ class _MultiStreamScreenState extends State<MultiStreamScreen> {
         ),
       ),
     );
-  }
-
-  Future<List<Product>> _getDataProvider(PaginationRequest request) {
-    switch (_selectedTabIndex) {
-      case 0:
-        return MockApiService.fetchProducts(request);
-      case 1:
-        return MockApiService.fetchProducts(request);
-      case 2:
-        return MockApiService.fetchProducts(request);
-      default:
-        return MockApiService.fetchProducts(request);
-    }
   }
 
   Stream<List<Product>> _getStreamProvider(PaginationRequest request) {

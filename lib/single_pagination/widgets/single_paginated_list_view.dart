@@ -8,12 +8,31 @@ import '../pagination.dart';
 /// This is a simpler alternative to [SinglePagination] when you just want
 /// a basic scrollable list with pagination.
 ///
-/// ## Example
+/// ## Example with Future
 ///
 /// ```dart
 /// SinglePaginatedListView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
-///   dataProvider: (request) => apiService.fetchProducts(request),
+///   provider: PaginationProvider.future(
+///     (request) => apiService.fetchProducts(request),
+///   ),
+///   childBuilder: (context, product, index) {
+///     return ListTile(
+///       title: Text(product.name),
+///       subtitle: Text('\$${product.price}'),
+///     );
+///   },
+/// )
+/// ```
+///
+/// ## Example with Stream
+///
+/// ```dart
+/// SinglePaginatedListView<Product>(
+///   request: PaginationRequest(page: 1, pageSize: 20),
+///   provider: PaginationProvider.stream(
+///     (request) => apiService.productsStream(request),
+///   ),
 ///   childBuilder: (context, product, index) {
 ///     return ListTile(
 ///       title: Text(product.name),
@@ -26,7 +45,7 @@ class SinglePaginatedListView<T> extends StatelessWidget {
   const SinglePaginatedListView({
     super.key,
     required this.request,
-    required this.dataProvider,
+    required this.provider,
     required this.childBuilder,
     this.separatorBuilder,
     this.emptyBuilder,
@@ -45,8 +64,8 @@ class SinglePaginatedListView<T> extends StatelessWidget {
   /// The initial pagination request configuration.
   final PaginationRequest request;
 
-  /// Function that fetches a page of data from your API.
-  final PaginationDataProvider<T> dataProvider;
+  /// Unified data provider (Future or Stream).
+  final PaginationProvider<T> provider;
 
   /// Builder for each list item.
   final Widget Function(BuildContext context, T item, int index) childBuilder;
@@ -95,7 +114,7 @@ class SinglePaginatedListView<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return SinglePagination<T>(
       request: request,
-      dataProvider: dataProvider,
+      provider: provider,
       itemBuilderType: PaginateBuilderType.listView,
       itemBuilder: (context, items, index) => childBuilder(context, items[index], index),
       separator: separatorBuilder != null
@@ -110,6 +129,7 @@ class SinglePaginatedListView<T> extends StatelessWidget {
                 errorBuilder: errorBuilder!,
               )
           : null,
+      retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
       reverse: reverse,
       padding: padding ?? const EdgeInsets.all(0),

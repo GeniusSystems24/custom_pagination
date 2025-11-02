@@ -35,8 +35,9 @@ class SingleStreamScreen extends StatelessWidget {
           Expanded(
             child: SinglePagination<Product>(
               request: const PaginationRequest(page: 1, pageSize: 15),
-              dataProvider: (request) => MockApiService.fetchProducts(request),
-              streamProvider: (request) => MockApiService.productsStream(request),
+              provider: PaginationProvider.stream(
+                (request) => MockApiService.productsStream(request),
+              ),
               itemBuilderType: PaginateBuilderType.listView,
               itemBuilder: (context, items, index) {
                 final product = items[index];

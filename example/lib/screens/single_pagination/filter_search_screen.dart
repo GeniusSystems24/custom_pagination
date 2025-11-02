@@ -109,12 +109,14 @@ class _FilterSearchScreenState extends State<FilterSearchScreen> {
                     ? {'category': _selectedCategory}
                     : null,
               ),
-              dataProvider: (request) async {
-                if (_searchQuery.isNotEmpty) {
-                  return MockApiService.searchProducts(_searchQuery, request);
-                }
-                return MockApiService.fetchProducts(request);
-              },
+              provider: PaginationProvider.future(
+                (request) async {
+                  if (_searchQuery.isNotEmpty) {
+                    return MockApiService.searchProducts(_searchQuery, request);
+                  }
+                  return MockApiService.fetchProducts(request);
+                },
+              ),
               childBuilder: (context, product, index) {
                 return _buildProductCard(product);
               },

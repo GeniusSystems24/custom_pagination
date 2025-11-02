@@ -15,7 +15,9 @@ class BasicListViewScreen extends StatelessWidget {
       ),
       body: SinglePaginatedListView<Product>(
         request: const PaginationRequest(page: 1, pageSize: 20),
-        dataProvider: (request) => MockApiService.fetchProducts(request),
+        provider: PaginationProvider.future(
+          (request) => MockApiService.fetchProducts(request),
+        ),
         childBuilder: (context, product, index) {
           return _buildProductCard(product);
         },

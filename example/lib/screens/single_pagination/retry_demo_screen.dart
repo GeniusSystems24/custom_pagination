@@ -34,9 +34,11 @@ class RetryDemoScreen extends StatelessWidget {
           Expanded(
             child: SinglePaginatedListView<Product>(
               request: const PaginationRequest(page: 1, pageSize: 15),
-              dataProvider: (request) => MockApiService.fetchProducts(
-                request,
-                simulateError: true, // Enable error simulation
+              provider: PaginationProvider.future(
+                (request) => MockApiService.fetchProducts(
+                  request,
+                  simulateError: true, // Enable error simulation
+                ),
               ),
               retryConfig: const RetryConfig(
                 maxAttempts: 3,

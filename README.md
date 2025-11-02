@@ -38,7 +38,7 @@ flutter pub get
 
 ## 🚀 Overview
 
-`SinglePagination` is a lightweight, widget-driven pagination helper that works with any asynchronous data source. Instead of depending on repositories or HTTP clients, you provide a callback that returns `Future<List<T>>` and, optionally, a separate stream factory for live updates. The widget handles page state, loading/error UI, scroll-to-item helpers, and filtering hooks so you can focus on mapping your domain responses to `List<T>`.
+`SinglePagination` is a lightweight, widget-driven pagination helper that works with any asynchronous data source. Instead of depending on repositories or HTTP clients, you provide a unified `PaginationProvider` that can be either Future-based (for REST APIs) or Stream-based (for real-time updates). The widget handles page state, loading/error UI, scroll-to-item helpers, and filtering hooks so you can focus on mapping your domain responses to `List<T>`.
 
 > Works great with repository helpers or any REST API that exposes paginated lists.
 
@@ -49,7 +49,9 @@ flutter pub get
 ```dart
 SinglePaginatedListView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: (request) => apiService.fetchProducts(request),
+  provider: PaginationProvider.future(
+    (request) => apiService.fetchProducts(request),
+  ),
   childBuilder: (context, product, index) {
     return ListTile(
       title: Text(product.name),
@@ -64,7 +66,9 @@ SinglePaginatedListView<Product>(
 ```dart
 SinglePaginatedGridView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: (request) => apiService.fetchProducts(request),
+  provider: PaginationProvider.future(
+    (request) => apiService.fetchProducts(request),
+  ),
   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
     crossAxisCount: 2,
     childAspectRatio: 0.75,
@@ -77,6 +81,21 @@ SinglePaginatedGridView<Product>(
 
 ## Data Provider Contract
 
+The library uses a unified `PaginationProvider` pattern that supports both Future-based and Stream-based data sources:
+
+```dart
+// Future-based provider for REST APIs
+final provider = PaginationProvider.future(
+  (request) => apiService.fetchProducts(request),
+);
+
+// Stream-based provider for real-time updates
+final streamProvider = PaginationProvider.stream(
+  (request) => apiService.productsStream(request),
+);
+```
+
+**Legacy typedefs** (for backward compatibility):
 ```dart
 typedef PaginationDataProvider<T> = Future<List<T>> Function(PaginationRequest request);
 typedef PaginationStreamProvider<T> = Stream<List<T>> Function(PaginationRequest request);
@@ -84,7 +103,7 @@ typedef PaginationStreamProvider<T> = Stream<List<T>> Function(PaginationRequest
 
 - The `PaginationRequest` carries the current page, `pageSize`, and optional filters.
 - Returning fewer items than `pageSize` will automatically mark the end of the list.
-- Provide `PaginationStreamProvider` when the backend exposes a watchable stream.
+- Use `PaginationProvider.stream()` when the backend exposes real-time updates.
 
 ### PaginationRequest
 
@@ -198,7 +217,7 @@ lib/
 ```dart
 SinglePagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: fetchData,
+  provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
   loadingWidget: Center(child: Text('Loading awesome content...')),
   emptyWidget: Center(child: Text('No items yet. Add some!')),
@@ -214,7 +233,7 @@ SinglePagination<MyModel>(
 ```dart
 SinglePagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: fetchData,
+  provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
   heightOfInitialLoadingAndEmptyWidget: 300, // Custom height
 )
@@ -242,7 +261,7 @@ Use `beforeBuild` to transform the state before rendering:
 ```dart
 SinglePagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: fetchData,
+  provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
   beforeBuild: (state) {
     // Sort items before rendering
@@ -362,15 +381,16 @@ The example app includes:
 
 ## 📡 Stream Support
 
-The library supports real-time updates through streams. Use `streamProvider` to receive live data updates:
+The library supports real-time updates through the unified `PaginationProvider` pattern. Use `PaginationProvider.stream()` to receive live data updates:
 
 ### Single Stream Example
 
 ```dart
 SinglePagination<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: (request) => apiService.fetchProducts(request),
-  streamProvider: (request) => apiService.productsStream(request),
+  provider: PaginationProvider.stream(
+    (request) => apiService.productsStream(request),
+  ),
   itemBuilder: (context, items, index) {
     return ProductCard(items[index]);
   },
@@ -395,8 +415,9 @@ class MultiStreamScreen extends StatefulWidget {
     return SinglePagination<Product>(
       key: ValueKey(selectedStream), // Force rebuild on stream change
       request: PaginationRequest(page: 1, pageSize: 20),
-      dataProvider: (request) => getDataProvider(request),
-      streamProvider: (request) => getStreamProvider(request),
+      provider: PaginationProvider.stream(
+        (request) => getStreamProvider(request),
+      ),
       itemBuilder: (context, items, index) {
         return ProductCard(items[index]);
       },
@@ -423,7 +444,9 @@ The library includes a powerful retry mechanism with exponential backoff:
 ```dart
 SinglePaginatedListView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
-  dataProvider: (request) => apiService.fetchProducts(request),
+  provider: PaginationProvider.future(
+    (request) => apiService.fetchProducts(request),
+  ),
   retryConfig: RetryConfig(
     maxAttempts: 3,
     initialDelay: Duration(seconds: 1),

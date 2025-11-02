@@ -63,8 +63,7 @@ class SinglePagination<T> extends StatefulWidget {
   SinglePagination({
     super.key,
     required PaginationRequest request,
-    required PaginationDataProvider<T> dataProvider,
-    PaginationStreamProvider<T>? streamProvider,
+    required PaginationProvider<T> provider,
     required this.itemBuilder,
     this.itemBuilderType = PaginateBuilderType.listView,
     this.heightOfInitialLoadingAndEmptyWidget,
@@ -96,18 +95,19 @@ class SinglePagination<T> extends StatefulWidget {
     VoidCallback? onClear,
     Logger? logger,
     int maxPagesInMemory = 5,
+    RetryConfig? retryConfig,
     SinglePaginationRefreshedChangeListener? refreshListener,
     List<SinglePaginationFilterChangeListener<T>>? filterListeners,
   }) : internalCubit = true,
        cubit = SinglePaginationCubit<T>(
          request: request,
-         dataProvider: dataProvider,
-         streamProvider: streamProvider,
+         provider: provider,
          listBuilder: listBuilder,
          onInsertionCallback: onInsertionCallback,
          onClear: onClear,
          logger: logger,
          maxPagesInMemory: maxPagesInMemory,
+         retryConfig: retryConfig,
        ),
 
        listeners = refreshListener != null || filterListeners?.isNotEmpty == true

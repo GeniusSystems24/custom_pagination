@@ -19,6 +19,60 @@ typedef WhereChecker<T> = bool Function(T item);
 typedef CompareBy<T> = int Function(T a, T b);
 typedef OnInsertionCallback<T> = void Function(List<T> items);
 
+/// Unified pagination data provider that can be either Future-based or Stream-based.
+///
+/// Use [PaginationProvider.future] for standard REST API pagination.
+/// Use [PaginationProvider.stream] for real-time updates.
+///
+/// Example with Future:
+/// ```dart
+/// final provider = PaginationProvider<Product>.future(
+///   (request) => apiService.fetchProducts(request),
+/// );
+/// ```
+///
+/// Example with Stream:
+/// ```dart
+/// final provider = PaginationProvider<Product>.stream(
+///   (request) => apiService.productsStream(request),
+/// );
+/// ```
+sealed class PaginationProvider<T> {
+  const PaginationProvider();
+
+  /// Creates a Future-based pagination provider for standard REST APIs.
+  const factory PaginationProvider.future(
+    Future<List<T>> Function(PaginationRequest request) dataProvider,
+  ) = FuturePaginationProvider<T>;
+
+  /// Creates a Stream-based pagination provider for real-time updates.
+  const factory PaginationProvider.stream(
+    Stream<List<T>> Function(PaginationRequest request) streamProvider,
+  ) = StreamPaginationProvider<T>;
+}
+
+/// Future-based pagination provider for standard REST APIs.
+final class FuturePaginationProvider<T> extends PaginationProvider<T> {
+  const FuturePaginationProvider(this.dataProvider);
+
+  /// Function that fetches a page of data from your API.
+  final Future<List<T>> Function(PaginationRequest request) dataProvider;
+}
+
+/// Stream-based pagination provider for real-time updates.
+final class StreamPaginationProvider<T> extends PaginationProvider<T> {
+  const StreamPaginationProvider(this.streamProvider);
+
+  /// Function that provides a stream of data updates.
+  final Stream<List<T>> Function(PaginationRequest request) streamProvider;
+}
+
+/// Legacy typedef for backward compatibility (will be deprecated).
+typedef PaginationDataProvider<T> = Future<List<T>> Function(PaginationRequest request);
+
+/// Legacy typedef for backward compatibility (will be deprecated).
+typedef PaginationStreamProvider<T> = Stream<List<T>> Function(PaginationRequest request);
+
 /// Signature for a function that scrolls the pagination list to a specific item ID.
 typedef PaginationScrollToItem =
     Future<bool> Function(

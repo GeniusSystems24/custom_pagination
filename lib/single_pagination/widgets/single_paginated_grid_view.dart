@@ -8,12 +8,32 @@ import '../pagination.dart';
 /// This is a simpler alternative to [SinglePagination] when you just want
 /// a basic grid with pagination.
 ///
-/// ## Example
+/// ## Example with Future
 ///
 /// ```dart
 /// SinglePaginatedGridView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
-///   dataProvider: (request) => apiService.fetchProducts(request),
+///   provider: PaginationProvider.future(
+///     (request) => apiService.fetchProducts(request),
+///   ),
+///   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+///     crossAxisCount: 2,
+///     childAspectRatio: 0.75,
+///   ),
+///   childBuilder: (context, product, index) {
+///     return ProductCard(product: product);
+///   },
+/// )
+/// ```
+///
+/// ## Example with Stream
+///
+/// ```dart
+/// SinglePaginatedGridView<Product>(
+///   request: PaginationRequest(page: 1, pageSize: 20),
+///   provider: PaginationProvider.stream(
+///     (request) => apiService.productsStream(request),
+///   ),
 ///   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
 ///     crossAxisCount: 2,
 ///     childAspectRatio: 0.75,
@@ -27,7 +47,7 @@ class SinglePaginatedGridView<T> extends StatelessWidget {
   const SinglePaginatedGridView({
     super.key,
     required this.request,
-    required this.dataProvider,
+    required this.provider,
     required this.gridDelegate,
     required this.childBuilder,
     this.emptyBuilder,
@@ -46,8 +66,8 @@ class SinglePaginatedGridView<T> extends StatelessWidget {
   /// The initial pagination request configuration.
   final PaginationRequest request;
 
-  /// Function that fetches a page of data from your API.
-  final PaginationDataProvider<T> dataProvider;
+  /// Unified data provider (Future or Stream).
+  final PaginationProvider<T> provider;
 
   /// The grid delegate that controls the grid layout.
   final SliverGridDelegate gridDelegate;
@@ -96,7 +116,7 @@ class SinglePaginatedGridView<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return SinglePagination<T>(
       request: request,
-      dataProvider: dataProvider,
+      provider: provider,
       itemBuilderType: PaginateBuilderType.gridView,
       gridDelegate: gridDelegate,
       itemBuilder: (context, items, index) => childBuilder(context, items[index], index),
@@ -109,6 +129,7 @@ class SinglePaginatedGridView<T> extends StatelessWidget {
                 errorBuilder: errorBuilder!,
               )
           : null,
+      retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
       reverse: reverse,
       padding: padding ?? const EdgeInsets.all(0),

@@ -9,6 +9,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Unified Provider Pattern 🔄
+- **PaginationProvider Sealed Class**: Type-safe unified provider pattern
+  - `PaginationProvider.future()` for REST API pagination
+  - `PaginationProvider.stream()` for real-time updates
+  - Single provider parameter replaces separate `dataProvider` and `streamProvider`
+  - Pattern matching with switch expressions for type safety
+  - Legacy typedefs maintained for backward compatibility
+
+### Changed
+
+#### API Improvements
+- **SinglePagination**: Updated to use unified `PaginationProvider<T>` parameter
+  - Removed separate `dataProvider` and `streamProvider` parameters
+  - Single `provider` parameter accepts both Future and Stream types
+  - Added `retryConfig` parameter support to widget
+  - Cleaner, more intuitive API
+
+- **SinglePaginationCubit**: Refactored to use unified provider
+  - Updated constructor to accept single `provider` parameter
+  - Pattern matching in `_fetch()` method for provider type detection
+  - Automatic stream attachment for Stream providers
+  - Maintains all existing functionality with cleaner implementation
+
+- **Convenience Widgets**: Updated to unified provider pattern
+  - `SinglePaginatedListView` now uses `provider` parameter
+  - `SinglePaginatedGridView` now uses `provider` parameter
+  - Updated documentation with Future and Stream examples
+  - Added `retryConfig` parameter support
+
+#### Example App Updates
+- Updated all example screens to use `PaginationProvider` pattern:
+  - Basic ListView screen
+  - GridView screen
+  - Retry Demo screen
+  - Filter & Search screen
+  - Single Stream screen (now uses `PaginationProvider.stream()`)
+  - Multi Stream screen (now uses `PaginationProvider.stream()`)
+- Removed obsolete `_getDataProvider` methods from stream examples
+- Cleaner, more consistent example code
+
+#### Documentation Updates
+- **README.md**: Comprehensive updates for unified provider pattern
+  - Updated Quick Start examples
+  - Added Data Provider Contract section with both patterns
+  - Updated all code examples to use `PaginationProvider`
+  - Updated Stream Support section
+  - Updated Retry Mechanism section
+  - Updated Overview section
+  - All examples now demonstrate unified provider usage
+
+### Migration Guide
+
+**For Future-based pagination** (REST APIs):
+```dart
+// Before
+SinglePagination<Product>(
+  dataProvider: (request) => apiService.fetchProducts(request),
+  ...
+)
+
+// After
+SinglePagination<Product>(
+  provider: PaginationProvider.future(
+    (request) => apiService.fetchProducts(request),
+  ),
+  ...
+)
+```
+
+**For Stream-based pagination** (Real-time updates):
+```dart
+// Before
+SinglePagination<Product>(
+  dataProvider: (request) => apiService.fetchProducts(request),
+  streamProvider: (request) => apiService.productsStream(request),
+  ...
+)
+
+// After
+SinglePagination<Product>(
+  provider: PaginationProvider.stream(
+    (request) => apiService.productsStream(request),
+  ),
+  ...
+)
+```
+
+**Legacy Support**: Old `dataProvider` and `streamProvider` typedefs remain available for backward compatibility.
+
+### Benefits
+- **Type Safety**: Sealed classes ensure compile-time type checking
+- **Cleaner API**: Single provider parameter instead of two
+- **Better Intent**: Clear distinction between Future and Stream sources
+- **Pattern Matching**: Leverages Dart 3.0 features for safer code
+- **Easier to Use**: More intuitive for developers
+- **Future Proof**: Extensible pattern for additional provider types
+
 #### Stream Examples 📡
 - **Single Stream Example**: Real-time product list with live price updates
   - Demonstrates `streamProvider` usage

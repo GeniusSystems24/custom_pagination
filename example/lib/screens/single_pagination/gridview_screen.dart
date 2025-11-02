@@ -15,7 +15,9 @@ class GridViewScreen extends StatelessWidget {
       ),
       body: SinglePaginatedGridView<Product>(
         request: const PaginationRequest(page: 1, pageSize: 20),
-        dataProvider: (request) => MockApiService.fetchProducts(request),
+        provider: PaginationProvider.future(
+          (request) => MockApiService.fetchProducts(request),
+        ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.75,
