@@ -6,6 +6,14 @@ import 'smart_pagination/filter_search_screen.dart';
 import 'smart_pagination/single_stream_screen.dart';
 import 'smart_pagination/multi_stream_screen.dart';
 import 'smart_pagination/merged_streams_screen.dart';
+import 'smart_pagination/cursor_pagination_screen.dart';
+import 'smart_pagination/horizontal_list_screen.dart';
+import 'smart_pagination/page_view_screen.dart';
+import 'smart_pagination/pull_to_refresh_screen.dart';
+import 'smart_pagination/staggered_grid_screen.dart';
+import 'smart_pagination/custom_states_screen.dart';
+import 'smart_pagination/before_build_hook_screen.dart';
+import 'smart_pagination/scroll_control_screen.dart';
 
 /// Home screen with navigation to all example screens
 class HomeScreen extends StatelessWidget {
@@ -55,6 +63,15 @@ class HomeScreen extends StatelessWidget {
             color: Colors.purple,
             onTap: () => _navigate(context, const FilterSearchScreen()),
           ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Pull to Refresh',
+            description: 'Swipe down to refresh paginated content',
+            icon: Icons.refresh,
+            color: Colors.amber,
+            onTap: () => _navigate(context, const PullToRefreshScreen()),
+          ),
           const SizedBox(height: 32),
           _buildHeader('Stream Examples'),
           const SizedBox(height: 16),
@@ -83,6 +100,71 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.merge_type,
             color: Colors.deepPurple,
             onTap: () => _navigate(context, const MergedStreamsScreen()),
+          ),
+          const SizedBox(height: 32),
+          _buildHeader('Advanced Examples'),
+          const SizedBox(height: 16),
+          _buildExampleCard(
+            context,
+            title: 'Cursor Pagination',
+            description: 'Cursor-based pagination for real-time data',
+            icon: Icons.list_alt,
+            color: Colors.teal,
+            onTap: () => _navigate(context, const CursorPaginationScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Horizontal Scroll',
+            description: 'Horizontal scrolling list with pagination',
+            icon: Icons.swipe_horizontal,
+            color: Colors.deepOrange,
+            onTap: () => _navigate(context, const HorizontalListScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'PageView',
+            description: 'Swipeable pages with automatic pagination',
+            icon: Icons.swipe,
+            color: Colors.pink,
+            onTap: () => _navigate(context, const PageViewScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Staggered Grid',
+            description: 'Pinterest-like masonry layout with pagination',
+            icon: Icons.view_quilt,
+            color: Colors.deepPurple,
+            onTap: () => _navigate(context, const StaggeredGridScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Custom States',
+            description: 'Custom loading, empty, and error states',
+            icon: Icons.palette,
+            color: Colors.blueGrey,
+            onTap: () => _navigate(context, const CustomStatesScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Scroll Control',
+            description: 'Programmatic scrolling to items or indices',
+            icon: Icons.keyboard_arrow_down,
+            color: Colors.indigo,
+            onTap: () => _navigate(context, const ScrollControlScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'beforeBuild Hook',
+            description: 'Execute logic before rendering the list',
+            icon: Icons.build,
+            color: Colors.brown,
+            onTap: () => _navigate(context, const BeforeBuildHookScreen()),
           ),
         ],
       ),
