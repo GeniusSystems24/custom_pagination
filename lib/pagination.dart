@@ -24,8 +24,8 @@
 ///       .toList();
 /// }
 ///
-/// // 2. Create a SinglePagination widget
-/// SinglePagination<MyModel>(
+/// // 2. Create a SmartPagination widget
+/// SmartPagination<MyModel>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
 ///   dataProvider: fetchData,
 ///   itemBuilder: (context, items, index) {
@@ -43,10 +43,10 @@ export 'core/core.dart';
 // Data models
 export 'data/data.dart';
 
-// Single pagination
-export 'single_pagination/pagination.dart';
+// Smart pagination
+export 'smart_pagination/pagination.dart';
 
-// Single pagination convenience widgets
-export 'single_pagination/widgets/single_paginated_list_view.dart';
-export 'single_pagination/widgets/single_paginated_grid_view.dart';
+// Smart pagination convenience widgets
+export 'smart_pagination/widgets/smart_paginated_list_view.dart';
+export 'smart_pagination/widgets/smart_paginated_grid_view.dart';
 

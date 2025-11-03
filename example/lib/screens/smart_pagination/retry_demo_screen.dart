@@ -32,7 +32,7 @@ class RetryDemoScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: SinglePaginatedListView<Product>(
+            child: SmartPaginatedListView<Product>(
               request: const PaginationRequest(page: 1, pageSize: 15),
               provider: PaginationProvider.future(
                 (request) => MockApiService.fetchProducts(

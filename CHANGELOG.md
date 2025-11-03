@@ -32,21 +32,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### API Improvements
-- **SinglePagination**: Updated to use unified `PaginationProvider<T>` parameter
+- **SmartPagination**: Updated to use unified `PaginationProvider<T>` parameter
   - Removed separate `dataProvider` and `streamProvider` parameters
   - Single `provider` parameter accepts both Future and Stream types
   - Added `retryConfig` parameter support to widget
   - Cleaner, more intuitive API
 
-- **SinglePaginationCubit**: Refactored to use unified provider
+- **SmartPaginationCubit**: Refactored to use unified provider
   - Updated constructor to accept single `provider` parameter
   - Pattern matching in `_fetch()` method for provider type detection
   - Automatic stream attachment for Stream providers
   - Maintains all existing functionality with cleaner implementation
 
 - **Convenience Widgets**: Updated to unified provider pattern
-  - `SinglePaginatedListView` now uses `provider` parameter
-  - `SinglePaginatedGridView` now uses `provider` parameter
+  - `SmartPaginatedListView` now uses `provider` parameter
+  - `SmartPaginatedGridView` now uses `provider` parameter
   - Updated documentation with Future and Stream examples
   - Added `retryConfig` parameter support
 
@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleaner, more consistent example code
 
 #### Tests Updates
-- Updated all SinglePaginationCubit tests to use `PaginationProvider.future()`
+- Updated all SmartPaginationCubit tests to use `PaginationProvider.future()`
 - All 14 tests passing with new API
 - Maintained 100% backward compatibility with legacy code
 
@@ -82,13 +82,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **For Future-based pagination** (REST APIs):
 ```dart
 // Before
-SinglePagination<Product>(
+SmartPagination<Product>(
   dataProvider: (request) => apiService.fetchProducts(request),
   ...
 )
 
 // After
-SinglePagination<Product>(
+SmartPagination<Product>(
   provider: PaginationProvider.future(
     (request) => apiService.fetchProducts(request),
   ),
@@ -99,14 +99,14 @@ SinglePagination<Product>(
 **For Stream-based pagination** (Real-time updates):
 ```dart
 // Before
-SinglePagination<Product>(
+SmartPagination<Product>(
   dataProvider: (request) => apiService.fetchProducts(request),
   streamProvider: (request) => apiService.productsStream(request),
   ...
 )
 
 // After
-SinglePagination<Product>(
+SmartPagination<Product>(
   provider: PaginationProvider.stream(
     (request) => apiService.productsStream(request),
   ),
@@ -116,7 +116,7 @@ SinglePagination<Product>(
 
 **For Merged Streams** (NEW - Multiple data sources):
 ```dart
-SinglePagination<Product>(
+SmartPagination<Product>(
   provider: PaginationProvider.mergeStreams(
     (request) => [
       apiService.regularProductsStream(request),
@@ -222,11 +222,11 @@ SinglePagination<Product>(
 If you were using DualPagination, you have two options:
 
 1. **Stay on v0.0.4**: Continue using the version with DualPagination
-2. **Migrate to custom solution**: Implement your own grouping logic on top of SinglePagination
+2. **Migrate to custom solution**: Implement your own grouping logic on top of SmartPagination
 
 Example of manual grouping:
 ```dart
-// Fetch all items with SinglePagination
+// Fetch all items with SmartPagination
 // Then group them manually in your widget
 final groupedItems = <String, List<Message>>{};
 for (var message in allMessages) {
@@ -241,7 +241,7 @@ for (var message in allMessages) {
 
 #### Core Features
 - Initial release of Custom Pagination library
-- `SinglePagination` widget with multiple layout support:
+- `SmartPagination` widget with multiple layout support:
   - ListView with separators
   - GridView with configurable delegates
   - PageView for swipeable content
@@ -250,7 +250,7 @@ for (var message in allMessages) {
   - Row layout (non-scrollable horizontal)
 
 #### State Management
-- `SinglePaginationCubit` implementing BLoC pattern
+- `SmartPaginationCubit` implementing BLoC pattern
 - Three state types: `Initial`, `Loaded`, `Error`
 - `PaginationMeta` for pagination metadata tracking
 - `PaginationRequest` for pagination configuration
@@ -259,17 +259,17 @@ for (var message in allMessages) {
 - Cursor-based and offset-based pagination support
 - Stream provider for real-time updates
 - Memory management with configurable `maxPagesInMemory`
-- Filter listeners (`SinglePaginationFilterChangeListener`)
-- Refresh listeners (`SinglePaginationRefreshedChangeListener`)
-- Order listeners (`SinglePaginationOrderChangeListener`)
+- Filter listeners (`SmartPaginationFilterChangeListener`)
+- Refresh listeners (`SmartPaginationRefreshedChangeListener`)
+- Order listeners (`SmartPaginationOrderChangeListener`)
 - Custom list builder for item transformation
 - `beforeBuild` hook for pre-render transformations
 
 #### Controller
-- `SinglePaginationController` with scroll capabilities
+- `SmartPaginationController` with scroll capabilities
 - Programmatic scrolling to index: `scrollToIndex()`
 - Programmatic scrolling to item: `scrollToItem()`
-- Controller factory: `SinglePaginationController.of()`
+- Controller factory: `SmartPaginationController.of()`
 - Public/private controller modes
 
 #### UI Components
@@ -352,12 +352,12 @@ for (var message in allMessages) {
   - `PaginationParseException` - For parsing errors
   - `PaginationRetryExhaustedException` - When all retries fail
 - **🔧 RetryHandler Utility**: Automatic retry execution with logging
-  - Integrated with both `SinglePaginationCubit` and `DualPaginationCubit`
+  - Integrated with both `SmartPaginationCubit` and `DualPaginationCubit`
   - Optional retry callbacks for monitoring
   - Smart error detection and classification
 
 #### Integration
-- Both `SinglePaginationCubit` and `DualPaginationCubit` support retry configuration
+- Both `SmartPaginationCubit` and `DualPaginationCubit` support retry configuration
 - Seamless integration with existing code (backward compatible)
 - Optional retry - works without configuration
 
@@ -403,7 +403,7 @@ DualPagination<String, Message>(
 
 #### Retry Configuration Example
 ```dart
-final cubit = SinglePaginationCubit<Product>(
+final cubit = SmartPaginationCubit<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchProducts,
   retryConfig: RetryConfig(
@@ -462,7 +462,7 @@ No new dependencies added. Phase 2 features use existing dependencies efficientl
     - NetworkException error wrapping
     - RetryExhaustedException attempts tracking
 
-- **Unit Tests for SinglePaginationCubit**:
+- **Unit Tests for SmartPaginationCubit**:
   - Initial state verification
   - Successful data fetching (14 tests)
   - Multiple page loading
@@ -501,7 +501,7 @@ No new dependencies added. Phase 2 features use existing dependencies efficientl
 - Organized tests into logical directories:
   - `test/unit/data/` - Data model tests
   - `test/unit/core/` - Core functionality tests
-  - `test/unit/single_pagination/` - SinglePagination tests
+  - `test/unit/smart_pagination/` - SmartPagination tests
   - `test/unit/dual_pagination/` - DualPagination tests
   - `test/helpers/` - Test utilities and models
 
@@ -513,7 +513,7 @@ No new dependencies added. Phase 2 features use existing dependencies efficientl
 - ✅ RetryConfig (100%)
 - ✅ RetryHandler (95%)
 - ✅ PaginationException classes (100%)
-- ✅ SinglePaginationCubit (85%)
+- ✅ SmartPaginationCubit (85%)
 - ✅ DualPaginationCubit (80%)
 
 #### Total Tests Written: **60+ tests**
@@ -537,15 +537,15 @@ flutter test --watch
 ### Example Test
 
 ```dart
-blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
-  'emits SinglePaginationLoaded when data is fetched successfully',
-  build: () => SinglePaginationCubit<TestItem>(
+blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
+  'emits SmartPaginationLoaded when data is fetched successfully',
+  build: () => SmartPaginationCubit<TestItem>(
     request: PaginationRequest(page: 1, pageSize: 20),
     dataProvider: dataProvider,
   ),
   act: (cubit) => cubit.fetchPaginatedList(),
   expect: () => [
-    isA<SinglePaginationLoaded<TestItem>>()
+    isA<SmartPaginationLoaded<TestItem>>()
         .having((s) => s.items.length, 'items length', 20)
         .having((s) => s.hasReachedEnd, 'hasReachedEnd', false),
   ],
@@ -572,14 +572,14 @@ blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
 ### Added
 
 #### Convenience Widgets 🛠️
-- **SinglePaginatedListView**: Simplified widget for ListView pagination
-  - Cleaner API than `SinglePagination`
+- **SmartPaginatedListView**: Simplified widget for ListView pagination
+  - Cleaner API than `SmartPagination`
   - Direct `childBuilder` instead of `itemBuilder`
   - Optional `separatorBuilder`, `emptyBuilder`, `errorBuilder`
   - Built-in retry configuration support
   - Reduced boilerplate for common use cases
 
-- **SinglePaginatedGridView**: Simplified widget for GridView pagination
+- **SmartPaginatedGridView**: Simplified widget for GridView pagination
   - Dedicated `gridDelegate` configuration
   - Direct `childBuilder` for grid items
   - Same clean API as ListView variant
@@ -643,7 +643,7 @@ blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
 #### Developer Experience
 - **Reduced Boilerplate**: Convenience widgets reduce code by 40-60%
   - Before: 30+ lines for basic ListView pagination
-  - After: 10-15 lines with `SinglePaginatedListView`
+  - After: 10-15 lines with `SmartPaginatedListView`
 
 - **Better API Design**: More intuitive method names
   - `childBuilder` instead of `itemBuilder` (clearer intent)
@@ -657,9 +657,9 @@ blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
 
 ### Example Usage
 
-#### Before (SinglePagination)
+#### Before (SmartPagination)
 ```dart
-SinglePagination<Product>(
+SmartPagination<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchProducts,
   itemBuilderType: PaginateBuilderType.listView,
@@ -676,9 +676,9 @@ SinglePagination<Product>(
 )
 ```
 
-#### After (SinglePaginatedListView)
+#### After (SmartPaginatedListView)
 ```dart
-SinglePaginatedListView<Product>(
+SmartPaginatedListView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchProducts,
   childBuilder: (context, product, index) {
@@ -705,7 +705,7 @@ example/
 │   │   └── mock_api_service.dart          # Mock API with delay & errors
 │   └── screens/
 │       ├── home_screen.dart               # Navigation hub
-│       ├── single_pagination/
+│       ├── smart_pagination/
 │       │   ├── basic_listview_screen.dart # Basic example
 │       │   ├── gridview_screen.dart       # Grid example
 │       │   ├── retry_demo_screen.dart     # Retry example

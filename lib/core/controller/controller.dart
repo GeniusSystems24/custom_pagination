@@ -1,7 +1,7 @@
 part of '../core.dart';
 
 /// Base interface for pagination controllers that provides common functionality
-/// for both SinglePagination and DualPagination controllers.
+/// for both SmartPagination and DualPagination controllers.
 abstract class IPaginationController<T> {
   /// The cubit exposing the REST-backed pagination state.
   IPaginationCubit<T, IPaginationState<T>> get cubit;

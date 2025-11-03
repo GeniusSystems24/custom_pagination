@@ -1,10 +1,10 @@
 part of '../pagination.dart';
 
-class SinglePaginationController<T>
+class SmartPaginationController<T>
     with PaginationScrollToItemMixin
     implements IPaginationScrollController<T> {
-  SinglePaginationController({
-    required SinglePaginationCubit<T> cubit,
+  SmartPaginationController({
+    required SmartPaginationCubit<T> cubit,
     this.isPublic = false,
     this.estimatedItemHeight = 60.0,
     this.animationDuration = const Duration(milliseconds: 500),
@@ -15,7 +15,7 @@ class SinglePaginationController<T>
     this.orderListeners,
   }) : _cubit = cubit;
 
-  factory SinglePaginationController.of({
+  factory SmartPaginationController.of({
     required PaginationRequest request,
     required PaginationDataProvider<T> dataProvider,
     PaginationStreamProvider<T>? streamProvider,
@@ -31,7 +31,7 @@ class SinglePaginationController<T>
     List<IPaginationFilterChangeListener<T>>? filterListeners,
     List<IPaginationOrderChangeListener<T>>? orderListeners,
   }) {
-    final cubit = SinglePaginationCubit<T>(
+    final cubit = SmartPaginationCubit<T>(
       request: request,
       dataProvider: dataProvider,
       streamProvider: streamProvider,
@@ -40,7 +40,7 @@ class SinglePaginationController<T>
       onClear: onClear,
     );
 
-    return SinglePaginationController<T>(
+    return SmartPaginationController<T>(
       cubit: cubit,
       isPublic: isPublic,
       estimatedItemHeight: estimatedItemHeight,
@@ -53,10 +53,10 @@ class SinglePaginationController<T>
     );
   }
 
-  final SinglePaginationCubit<T> _cubit;
+  final SmartPaginationCubit<T> _cubit;
 
   @override
-  SinglePaginationCubit<T> get cubit => _cubit;
+  SmartPaginationCubit<T> get cubit => _cubit;
 
   @override
   SliverObserverController? observerController;

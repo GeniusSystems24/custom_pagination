@@ -100,7 +100,7 @@ class _FilterSearchScreenState extends State<FilterSearchScreen> {
           const Divider(height: 1),
           // Product List
           Expanded(
-            child: SinglePaginatedListView<Product>(
+            child: SmartPaginatedListView<Product>(
               key: ValueKey('$_selectedCategory-$_searchQuery'),
               request: PaginationRequest(
                 page: 1,

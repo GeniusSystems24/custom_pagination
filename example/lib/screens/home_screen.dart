@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'single_pagination/basic_listview_screen.dart';
-import 'single_pagination/gridview_screen.dart';
-import 'single_pagination/retry_demo_screen.dart';
-import 'single_pagination/filter_search_screen.dart';
-import 'single_pagination/single_stream_screen.dart';
-import 'single_pagination/multi_stream_screen.dart';
-import 'single_pagination/merged_streams_screen.dart';
+import 'smart_pagination/basic_listview_screen.dart';
+import 'smart_pagination/gridview_screen.dart';
+import 'smart_pagination/retry_demo_screen.dart';
+import 'smart_pagination/filter_search_screen.dart';
+import 'smart_pagination/single_stream_screen.dart';
+import 'smart_pagination/multi_stream_screen.dart';
+import 'smart_pagination/merged_streams_screen.dart';
 
 /// Home screen with navigation to all example screens
 class HomeScreen extends StatelessWidget {

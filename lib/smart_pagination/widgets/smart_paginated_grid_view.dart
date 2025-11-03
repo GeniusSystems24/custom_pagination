@@ -5,13 +5,13 @@ import '../pagination.dart';
 
 /// A convenience widget for creating a paginated GridView.
 ///
-/// This is a simpler alternative to [SinglePagination] when you just want
+/// This is a simpler alternative to [SmartPagination] when you just want
 /// a basic grid with pagination.
 ///
 /// ## Example with Future
 ///
 /// ```dart
-/// SinglePaginatedGridView<Product>(
+/// SmartPaginatedGridView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
 ///   provider: PaginationProvider.future(
 ///     (request) => apiService.fetchProducts(request),
@@ -29,7 +29,7 @@ import '../pagination.dart';
 /// ## Example with Stream
 ///
 /// ```dart
-/// SinglePaginatedGridView<Product>(
+/// SmartPaginatedGridView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
 ///   provider: PaginationProvider.stream(
 ///     (request) => apiService.productsStream(request),
@@ -43,8 +43,8 @@ import '../pagination.dart';
 ///   },
 /// )
 /// ```
-class SinglePaginatedGridView<T> extends StatelessWidget {
-  const SinglePaginatedGridView({
+class SmartPaginatedGridView<T> extends StatelessWidget {
+  const SmartPaginatedGridView({
     super.key,
     required this.request,
     required this.provider,
@@ -114,7 +114,7 @@ class SinglePaginatedGridView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SinglePagination<T>(
+    return SmartPagination<T>(
       request: request,
       provider: provider,
       itemBuilderType: PaginateBuilderType.gridView,

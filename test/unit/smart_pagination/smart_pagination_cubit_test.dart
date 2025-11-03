@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/test_models.dart';
 
 void main() {
-  group('SinglePaginationCubit', () {
+  group('SmartPaginationCubit', () {
     late Future<List<TestItem>> Function(PaginationRequest) dataProviderFn;
 
     setUp(() {
@@ -17,36 +17,36 @@ void main() {
       };
     });
 
-    test('initial state is SinglePaginationInitial', () {
-      final cubit = SinglePaginationCubit<TestItem>(
+    test('initial state is SmartPaginationInitial', () {
+      final cubit = SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(dataProviderFn),
       );
 
-      expect(cubit.state, isA<SinglePaginationInitial<TestItem>>());
+      expect(cubit.state, isA<SmartPaginationInitial<TestItem>>());
       expect(cubit.didFetch, isFalse);
 
       cubit.dispose();
     });
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
-      'emits SinglePaginationLoaded when data is fetched successfully',
-      build: () => SinglePaginationCubit<TestItem>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
+      'emits SmartPaginationLoaded when data is fetched successfully',
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(dataProviderFn),
       ),
       act: (cubit) => cubit.fetchPaginatedList(),
       expect: () => [
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'items length', 20)
             .having((s) => s.hasReachedEnd, 'hasReachedEnd', false)
             .having((s) => s.meta.page, 'page', 1),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'loads multiple pages',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 10),
         provider: PaginationProvider.future(dataProviderFn),
       ),
@@ -57,19 +57,19 @@ void main() {
       },
       expect: () => [
         // First page
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'first page items', 10)
             .having((s) => s.meta.page, 'first page number', 1),
         // Second page
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'second page items', 20)
             .having((s) => s.meta.page, 'second page number', 2),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'emits error when data provider throws',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(
           (request) async {
@@ -79,14 +79,14 @@ void main() {
       ),
       act: (cubit) => cubit.fetchPaginatedList(),
       expect: () => [
-        isA<SinglePaginationError<TestItem>>()
+        isA<SmartPaginationError<TestItem>>()
             .having((s) => s.error.toString(), 'error message', contains('Network error')),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'refreshPaginatedList clears existing data and starts over',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 10),
         provider: PaginationProvider.future(dataProviderFn),
       ),
@@ -97,18 +97,18 @@ void main() {
       },
       expect: () => [
         // First fetch
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'first fetch', 10),
         // Refresh (resets to page 1)
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'after refresh', 10)
             .having((s) => s.meta.page, 'page after refresh', 1),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'filterPaginatedList filters items',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(dataProviderFn),
       ),
@@ -118,16 +118,16 @@ void main() {
         cubit.filterPaginatedList((item) => item.value < 10);
       },
       expect: () => [
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'before filter', 20),
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'after filter', 10),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'insertEmit adds item at specified index',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 5),
         provider: PaginationProvider.future(dataProviderFn),
       ),
@@ -137,24 +137,24 @@ void main() {
         cubit.insertEmit(TestItem(id: '999', name: 'Inserted', value: 999), index: 2);
       },
       expect: () => [
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'before insert', 5),
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'after insert', 6)
             .having((s) => s.items[2].id, 'inserted item', '999'),
       ],
     );
 
-    blocTest<SinglePaginationCubit<TestItem>, SinglePaginationState<TestItem>>(
+    blocTest<SmartPaginationCubit<TestItem>, SmartPaginationState<TestItem>>(
       'addOrUpdateEmit updates existing item',
-      build: () => SinglePaginationCubit<TestItem>(
+      build: () => SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 5),
         provider: PaginationProvider.future(dataProviderFn),
       ),
       act: (cubit) async {
         cubit.fetchPaginatedList();
         await Future.delayed(Duration(milliseconds: 50));
-        final existingItem = (cubit.state as SinglePaginationLoaded<TestItem>).items[0];
+        final existingItem = (cubit.state as SmartPaginationLoaded<TestItem>).items[0];
         final updatedItem = TestItem(
           id: existingItem.id,
           name: 'Updated',
@@ -163,16 +163,16 @@ void main() {
         cubit.addOrUpdateEmit(updatedItem);
       },
       expect: () => [
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'before update', 5),
-        isA<SinglePaginationLoaded<TestItem>>()
+        isA<SmartPaginationLoaded<TestItem>>()
             .having((s) => s.items.length, 'after update', 5)
             .having((s) => s.items[0].name, 'updated name', 'Updated'),
       ],
     );
 
     test('listBuilder transforms items', () async {
-      final cubit = SinglePaginationCubit<TestItem>(
+      final cubit = SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 10),
         provider: PaginationProvider.future(dataProviderFn),
         listBuilder: (items) {
@@ -184,7 +184,7 @@ void main() {
       cubit.fetchPaginatedList();
       await Future.delayed(Duration(milliseconds: 50));
 
-      final state = cubit.state as SinglePaginationLoaded<TestItem>;
+      final state = cubit.state as SmartPaginationLoaded<TestItem>;
       expect(state.items.first.value, equals(9)); // Last item should be first
       expect(state.items.last.value, equals(0)); // First item should be last
 
@@ -192,7 +192,7 @@ void main() {
     });
 
     test('maxPagesInMemory limits cached pages', () async {
-      final cubit = SinglePaginationCubit<TestItem>(
+      final cubit = SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 5),
         provider: PaginationProvider.future(dataProviderFn),
         maxPagesInMemory: 2,
@@ -206,7 +206,7 @@ void main() {
       cubit.fetchPaginatedList(); // Page 3 (should evict page 1)
       await Future.delayed(Duration(milliseconds: 50));
 
-      final state = cubit.state as SinglePaginationLoaded<TestItem>;
+      final state = cubit.state as SmartPaginationLoaded<TestItem>;
       // Should have items from page 2 and 3 only (10 items)
       expect(state.items.length, equals(10));
 
@@ -215,7 +215,7 @@ void main() {
 
     test('cancelOngoingRequest cancels current fetch', () async {
       int fetchCount = 0;
-      final cubit = SinglePaginationCubit<TestItem>(
+      final cubit = SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 10),
         provider: PaginationProvider.future(
           (request) async {
@@ -232,14 +232,14 @@ void main() {
       await Future.delayed(Duration(milliseconds: 150));
 
       // State should still be initial because fetch was cancelled
-      expect(cubit.state, isA<SinglePaginationInitial<TestItem>>());
+      expect(cubit.state, isA<SmartPaginationInitial<TestItem>>());
       expect(fetchCount, equals(1)); // Fetch was started
 
       cubit.dispose();
     });
 
     test('hasReachedEnd is true when no more items', () async {
-      final cubit = SinglePaginationCubit<TestItem>(
+      final cubit = SmartPaginationCubit<TestItem>(
         request: PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(
           (request) async {
@@ -252,7 +252,7 @@ void main() {
       cubit.fetchPaginatedList();
       await Future.delayed(Duration(milliseconds: 50));
 
-      final state = cubit.state as SinglePaginationLoaded<TestItem>;
+      final state = cubit.state as SmartPaginationLoaded<TestItem>;
       expect(state.hasReachedEnd, isTrue);
 
       cubit.dispose();

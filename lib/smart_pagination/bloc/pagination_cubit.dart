@@ -1,8 +1,8 @@
 part of '../pagination.dart';
 
-class SinglePaginationCubit<T>
-    extends IPaginationListCubit<T, SinglePaginationState<T>> {
-  SinglePaginationCubit({
+class SmartPaginationCubit<T>
+    extends IPaginationListCubit<T, SmartPaginationState<T>> {
+  SmartPaginationCubit({
     required PaginationRequest request,
     required PaginationProvider<T> provider,
     ListBuilder<T>? listBuilder,
@@ -20,7 +20,7 @@ class SinglePaginationCubit<T>
        _retryHandler = retryConfig != null ? RetryHandler(retryConfig) : null,
        initialRequest = request,
        _currentRequest = request,
-       super(SinglePaginationInitial<T>());
+       super(SmartPaginationInitial<T>());
 
   final PaginationProvider<T> _provider;
   final ListBuilder<T>? _listBuilder;
@@ -50,7 +50,7 @@ class SinglePaginationCubit<T>
   @override
   void filterPaginatedList(WhereChecker<T>? searchTerm) {
     final currentState = state;
-    if (currentState is! SinglePaginationLoaded<T>) return;
+    if (currentState is! SmartPaginationLoaded<T>) return;
 
     if (searchTerm == null) {
       emit(
@@ -88,7 +88,7 @@ class SinglePaginationCubit<T>
 
   @override
   void fetchPaginatedList({PaginationRequest? requestOverride, int? limit}) {
-    if (state is SinglePaginationInitial<T>) {
+    if (state is SmartPaginationInitial<T>) {
       refreshPaginatedList(requestOverride: requestOverride, limit: limit);
       return;
     }
@@ -154,7 +154,7 @@ class SinglePaginationCubit<T>
       _onInsertionCallback?.call(aggregated);
 
       emit(
-        SinglePaginationLoaded<T>(
+        SmartPaginationLoaded<T>(
           items: List<T>.from(aggregated),
           allItems: aggregated,
           meta: meta,
@@ -178,7 +178,7 @@ class SinglePaginationCubit<T>
         error: error,
         stackTrace: stackTrace,
       );
-      emit(SinglePaginationError<T>(error: error));
+      emit(SmartPaginationError<T>(error: error));
     } catch (error, stackTrace) {
       final exception = Exception(error.toString());
       _logger.e(
@@ -186,7 +186,7 @@ class SinglePaginationCubit<T>
         error: exception,
         stackTrace: stackTrace,
       );
-      emit(SinglePaginationError<T>(error: exception));
+      emit(SmartPaginationError<T>(error: exception));
     }
   }
 
@@ -225,7 +225,7 @@ class SinglePaginationCubit<T>
         _currentMeta = meta;
 
         emit(
-          SinglePaginationLoaded<T>(
+          SmartPaginationLoaded<T>(
             items: List<T>.from(aggregated),
             allItems: aggregated,
             meta: meta,
@@ -241,7 +241,7 @@ class SinglePaginationCubit<T>
           error: exception,
           stackTrace: stack,
         );
-        emit(SinglePaginationError<T>(error: exception));
+        emit(SmartPaginationError<T>(error: exception));
       },
     );
   }
@@ -272,7 +272,7 @@ class SinglePaginationCubit<T>
   @override
   void insertEmit(T item, {int index = 0}) {
     final currentState = state;
-    if (currentState is! SinglePaginationLoaded<T>) return;
+    if (currentState is! SmartPaginationLoaded<T>) return;
 
     final updated = List<T>.from(currentState.allItems);
     final insertIndex = index.clamp(0, updated.length);
@@ -291,7 +291,7 @@ class SinglePaginationCubit<T>
   @override
   void addOrUpdateEmit(T item, {int index = 0}) {
     final currentState = state;
-    if (currentState is! SinglePaginationLoaded<T>) return;
+    if (currentState is! SmartPaginationLoaded<T>) return;
 
     final updated = List<T>.from(currentState.allItems);
     final existingIndex = updated.indexWhere((element) => element == item);

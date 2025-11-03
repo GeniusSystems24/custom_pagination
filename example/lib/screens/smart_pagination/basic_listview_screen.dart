@@ -11,7 +11,7 @@ class BasicListViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Basic ListView')),
-      body: SinglePaginatedListView<Product>(
+      body: SmartPaginatedListView<Product>(
         request: const PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(
           (request) => MockApiService.fetchProducts(request),

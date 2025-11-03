@@ -5,13 +5,13 @@ import '../pagination.dart';
 
 /// A convenience widget for creating a paginated ListView.
 ///
-/// This is a simpler alternative to [SinglePagination] when you just want
+/// This is a simpler alternative to [SmartPagination] when you just want
 /// a basic scrollable list with pagination.
 ///
 /// ## Example with Future
 ///
 /// ```dart
-/// SinglePaginatedListView<Product>(
+/// SmartPaginatedListView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
 ///   provider: PaginationProvider.future(
 ///     (request) => apiService.fetchProducts(request),
@@ -28,7 +28,7 @@ import '../pagination.dart';
 /// ## Example with Stream
 ///
 /// ```dart
-/// SinglePaginatedListView<Product>(
+/// SmartPaginatedListView<Product>(
 ///   request: PaginationRequest(page: 1, pageSize: 20),
 ///   provider: PaginationProvider.stream(
 ///     (request) => apiService.productsStream(request),
@@ -41,8 +41,8 @@ import '../pagination.dart';
 ///   },
 /// )
 /// ```
-class SinglePaginatedListView<T> extends StatelessWidget {
-  const SinglePaginatedListView({
+class SmartPaginatedListView<T> extends StatelessWidget {
+  const SmartPaginatedListView({
     super.key,
     required this.request,
     required this.provider,
@@ -112,7 +112,7 @@ class SinglePaginatedListView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SinglePagination<T>(
+    return SmartPagination<T>(
       request: request,
       provider: provider,
       itemBuilderType: PaginateBuilderType.listView,

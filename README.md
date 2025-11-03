@@ -38,7 +38,7 @@ flutter pub get
 
 ## 🚀 Overview
 
-`SinglePagination` is a lightweight, widget-driven pagination helper that works with any asynchronous data source. Instead of depending on repositories or HTTP clients, you provide a unified `PaginationProvider` that can be either Future-based (for REST APIs) or Stream-based (for real-time updates). The widget handles page state, loading/error UI, scroll-to-item helpers, and filtering hooks so you can focus on mapping your domain responses to `List<T>`.
+`SmartPagination` is a lightweight, widget-driven pagination helper that works with any asynchronous data source. Instead of depending on repositories or HTTP clients, you provide a unified `PaginationProvider` that can be either Future-based (for REST APIs) or Stream-based (for real-time updates). The widget handles page state, loading/error UI, scroll-to-item helpers, and filtering hooks so you can focus on mapping your domain responses to `List<T>`.
 
 > Works great with repository helpers or any REST API that exposes paginated lists.
 
@@ -47,7 +47,7 @@ flutter pub get
 ### Simple ListView Pagination
 
 ```dart
-SinglePaginatedListView<Product>(
+SmartPaginatedListView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(
     (request) => apiService.fetchProducts(request),
@@ -64,7 +64,7 @@ SinglePaginatedListView<Product>(
 ### GridView Pagination
 
 ```dart
-SinglePaginatedGridView<Product>(
+SmartPaginatedGridView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(
     (request) => apiService.fetchProducts(request),
@@ -119,45 +119,45 @@ Fields are immutable; use `copyWith` when you need to adjust values.
 
 ### PaginationMeta
 
-Every `SinglePaginationLoaded` state surfaces a `PaginationMeta` instance describing the last fetch (page, pageSize, hasNext, etc.).
+Every `SmartPaginationLoaded` state surfaces a `PaginationMeta` instance describing the last fetch (page, pageSize, hasNext, etc.).
 
 ## State Lifecycle
 
 ```mermaid
 stateDiagram-v2
-  [*] --> SinglePaginationInitial
-  SinglePaginationInitial --> SinglePaginationLoaded : fetchPaginatedList success
-  SinglePaginationInitial --> SinglePaginationError : fetchPaginatedList failure
+  [*] --> SmartPaginationInitial
+  SmartPaginationInitial --> SmartPaginationLoaded : fetchPaginatedList success
+  SmartPaginationInitial --> SmartPaginationError : fetchPaginatedList failure
 
-  SinglePaginationLoaded --> SinglePaginationLoaded : fetchPaginatedList (next page)
-  SinglePaginationLoaded --> SinglePaginationLoaded : refreshPaginatedList
-  SinglePaginationLoaded --> SinglePaginationLoaded : filterPaginatedList
-  SinglePaginationLoaded --> SinglePaginationReachedEnd : hasReachedEnd == true
-  SinglePaginationLoaded --> SinglePaginationError : fetchPaginatedList failure
+  SmartPaginationLoaded --> SmartPaginationLoaded : fetchPaginatedList (next page)
+  SmartPaginationLoaded --> SmartPaginationLoaded : refreshPaginatedList
+  SmartPaginationLoaded --> SmartPaginationLoaded : filterPaginatedList
+  SmartPaginationLoaded --> SmartPaginationReachedEnd : hasReachedEnd == true
+  SmartPaginationLoaded --> SmartPaginationError : fetchPaginatedList failure
 
-  SinglePaginationReachedEnd --> SinglePaginationLoaded : refreshPaginatedList
-  SinglePaginationReachedEnd --> SinglePaginationError : fetchPaginatedList failure
+  SmartPaginationReachedEnd --> SmartPaginationLoaded : refreshPaginatedList
+  SmartPaginationReachedEnd --> SmartPaginationError : fetchPaginatedList failure
 
-  SinglePaginationError --> SinglePaginationLoaded : retry succeeds
-  SinglePaginationError --> SinglePaginationError : retry fails
+  SmartPaginationError --> SmartPaginationLoaded : retry succeeds
+  SmartPaginationError --> SmartPaginationError : retry fails
 ```
 
-- **SinglePaginationInitial** - before the first fetch
-- **SinglePaginationLoaded** - exposes `items`, `allItems`, and `meta`
-- **SinglePaginationReachedEnd** - same as loaded with `hasReachedEnd == true`
-- **SinglePaginationError** - wraps the thrown `Exception`
+- **SmartPaginationInitial** - before the first fetch
+- **SmartPaginationLoaded** - exposes `items`, `allItems`, and `meta`
+- **SmartPaginationReachedEnd** - same as loaded with `hasReachedEnd == true`
+- **SmartPaginationError** - wraps the thrown `Exception`
 
 ## Listeners & Helpers
 
-- `SinglePaginationRefreshedChangeListener` - toggle `refreshed = true` to trigger a refresh
-- `SinglePaginationFilterChangeListener<T>` - push a `WhereChecker<T>` to perform in-memory filtering
-- `SinglePaginationOrderChangeListener<T>` - provide a `CompareBy<T>` sorter before rendering
+- `SmartPaginationRefreshedChangeListener` - toggle `refreshed = true` to trigger a refresh
+- `SmartPaginationFilterChangeListener<T>` - push a `WhereChecker<T>` to perform in-memory filtering
+- `SmartPaginationOrderChangeListener<T>` - provide a `CompareBy<T>` sorter before rendering
 
 Attach them through the `listeners` parameter; the widget wires them using `MultiProvider` automatically.
 
 ## Controller APIs
 
-`SinglePaginationController` mirrors the cubit methods:
+`SmartPaginationController` mirrors the cubit methods:
 
 - `fetchPaginatedList({PaginationRequest? requestOverride, int? limit})`
 - `refreshPaginatedList({PaginationRequest? requestOverride, int? limit})`
@@ -179,15 +179,15 @@ Attach them through the `listeners` parameter; the widget wires them using `Mult
 Example test:
 
 ```dart
-blocTest<SinglePaginationCubit<MyModel>, SinglePaginationState<MyModel>>(
+blocTest<SmartPaginationCubit<MyModel>, SmartPaginationState<MyModel>>(
   'emits loaded state when data is fetched successfully',
-  build: () => SinglePaginationCubit<MyModel>(
+  build: () => SmartPaginationCubit<MyModel>(
     request: PaginationRequest(page: 1, pageSize: 20),
     dataProvider: (request) async => [MyModel(id: '1', name: 'Test')],
   ),
   act: (cubit) => cubit.fetchPaginatedList(),
   expect: () => [
-    isA<SinglePaginationLoaded<MyModel>>(),
+    isA<SmartPaginationLoaded<MyModel>>(),
   ],
 );
 ```
@@ -204,9 +204,9 @@ lib/
 │   └── widget/             # Shared widgets (loaders, errors, empty states)
 ├── data/                   # Data models
 │   └── models/             # PaginationRequest, PaginationMeta
-└── single_pagination/      # Single pagination implementation
-    ├── bloc/               # SinglePaginationCubit, State, Listeners
-    ├── controller/         # SinglePaginationController with scroll capabilities
+└── smart_pagination/      # Single pagination implementation
+    ├── bloc/               # SmartPaginationCubit, State, Listeners
+    ├── controller/         # SmartPaginationController with scroll capabilities
     └── widgets/            # PaginateApiView with multiple layout support
 ```
 
@@ -215,7 +215,7 @@ lib/
 ### Custom Empty and Loading States
 
 ```dart
-SinglePagination<MyModel>(
+SmartPagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
@@ -231,7 +231,7 @@ SinglePagination<MyModel>(
 ### Custom Height for Empty/Loading
 
 ```dart
-SinglePagination<MyModel>(
+SmartPagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
@@ -242,7 +242,7 @@ SinglePagination<MyModel>(
 ### Horizontal Scrolling
 
 ```dart
-SinglePagination.listView(
+SmartPagination.listView(
   cubit: cubit,
   scrollDirection: Axis.horizontal,
   itemBuilder: (context, items, index) {
@@ -259,7 +259,7 @@ SinglePagination.listView(
 Use `beforeBuild` to transform the state before rendering:
 
 ```dart
-SinglePagination<MyModel>(
+SmartPagination<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(fetchData),
   itemBuilder: (context, items, index) => ListTile(title: Text(items[index].name)),
@@ -278,7 +278,7 @@ SinglePagination<MyModel>(
 Transform items before they're emitted:
 
 ```dart
-SinglePaginationCubit<MyModel>(
+SmartPaginationCubit<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchData,
   listBuilder: (items) {
@@ -291,7 +291,7 @@ SinglePaginationCubit<MyModel>(
 ### Callbacks
 
 ```dart
-SinglePaginationCubit<MyModel>(
+SmartPaginationCubit<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchData,
   onInsertionCallback: (items) {
@@ -306,7 +306,7 @@ SinglePaginationCubit<MyModel>(
 ### Custom Logger
 
 ```dart
-SinglePaginationCubit<MyModel>(
+SmartPaginationCubit<MyModel>(
   request: PaginationRequest(page: 1, pageSize: 20),
   dataProvider: fetchData,
   logger: Logger(
@@ -318,7 +318,7 @@ SinglePaginationCubit<MyModel>(
 
 ## 🎯 Best Practices
 
-1. **Reuse Cubits**: Create cubits once and reuse them with `SinglePagination.cubit()`
+1. **Reuse Cubits**: Create cubits once and reuse them with `SmartPagination.cubit()`
 2. **Memory Management**: Set `maxPagesInMemory` based on your item size and device constraints
 3. **Error Handling**: Always provide custom `onError` for better UX
 4. **Testing**: Mock data providers for predictable tests
@@ -387,7 +387,7 @@ The library supports real-time updates through the unified `PaginationProvider` 
 ### Single Stream Example
 
 ```dart
-SinglePagination<Product>(
+SmartPagination<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.stream(
     (request) => apiService.productsStream(request),
@@ -413,7 +413,7 @@ You can switch between different streams dynamically:
 class MultiStreamScreen extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
-    return SinglePagination<Product>(
+    return SmartPagination<Product>(
       key: ValueKey(selectedStream), // Force rebuild on stream change
       request: PaginationRequest(page: 1, pageSize: 20),
       provider: PaginationProvider.stream(
@@ -443,7 +443,7 @@ class MultiStreamScreen extends StatefulWidget {
 **NEW**: Merge multiple data streams into one unified stream:
 
 ```dart
-SinglePagination<Product>(
+SmartPagination<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.mergeStreams(
     (request) => [
@@ -469,7 +469,7 @@ Perfect for:
 The library includes a powerful retry mechanism with exponential backoff:
 
 ```dart
-SinglePaginatedListView<Product>(
+SmartPaginatedListView<Product>(
   request: PaginationRequest(page: 1, pageSize: 20),
   provider: PaginationProvider.future(
     (request) => apiService.fetchProducts(request),
@@ -502,7 +502,7 @@ Features:
 - [x] Single Pagination implementation
 - [x] Retry mechanism with exponential backoff
 - [x] Comprehensive unit tests (60+ tests)
-- [x] Convenience widgets (SinglePaginatedListView, etc.)
+- [x] Convenience widgets (SmartPaginatedListView, etc.)
 - [x] Example app with multiple demos
 - [ ] Widget and integration tests
 - [ ] Performance benchmarks

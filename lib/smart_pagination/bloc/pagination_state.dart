@@ -1,7 +1,7 @@
 part of '../pagination.dart';
 
 @immutable
-abstract class SinglePaginationState<T> implements IPaginationInitialState<T> {
+abstract class SmartPaginationState<T> implements IPaginationInitialState<T> {
   @override
   bool get hasReachedEnd => false;
 
@@ -12,12 +12,12 @@ abstract class SinglePaginationState<T> implements IPaginationInitialState<T> {
   PaginationMeta? get meta => null;
 }
 
-class SinglePaginationInitial<T> extends SinglePaginationState<T> {}
+class SmartPaginationInitial<T> extends SmartPaginationState<T> {}
 
-class SinglePaginationError<T> extends SinglePaginationState<T>
+class SmartPaginationError<T> extends SmartPaginationState<T>
     implements IPaginationErrorState<T> {
   final Exception _error;
-  SinglePaginationError({required Exception error}) : _error = error;
+  SmartPaginationError({required Exception error}) : _error = error;
 
   @override
   Exception get error => _error;
@@ -26,16 +26,16 @@ class SinglePaginationError<T> extends SinglePaginationState<T>
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SinglePaginationError<T> && other.error == error;
+    return other is SmartPaginationError<T> && other.error == error;
   }
 
   @override
   int get hashCode => error.hashCode;
 }
 
-class SinglePaginationLoaded<T> extends SinglePaginationState<T>
+class SmartPaginationLoaded<T> extends SmartPaginationState<T>
     implements IPaginationLoadedState<T> {
-  SinglePaginationLoaded({
+  SmartPaginationLoaded({
     required this.items,
     required this.allItems,
     required this.meta,
@@ -53,7 +53,7 @@ class SinglePaginationLoaded<T> extends SinglePaginationState<T>
   @override
   final DateTime lastUpdate;
 
-  SinglePaginationLoaded<T> copyWith({
+  SmartPaginationLoaded<T> copyWith({
     List<T>? items,
     List<T>? allItems,
     bool? hasReachedEnd,
@@ -63,7 +63,7 @@ class SinglePaginationLoaded<T> extends SinglePaginationState<T>
     final updatedAllItems = allItems ?? this.allItems;
     final updatedItems = items ?? this.items;
 
-    return SinglePaginationLoaded<T>(
+    return SmartPaginationLoaded<T>(
       items: updatedItems,
       allItems: updatedAllItems,
       hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
@@ -76,7 +76,7 @@ class SinglePaginationLoaded<T> extends SinglePaginationState<T>
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SinglePaginationLoaded<T> &&
+    return other is SmartPaginationLoaded<T> &&
         other.hasReachedEnd == hasReachedEnd &&
         listEquals(other.items, items) &&
         listEquals(other.allItems, allItems) &&

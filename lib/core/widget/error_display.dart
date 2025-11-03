@@ -1,4 +1,4 @@
-part of '../../single_pagination/pagination.dart';
+part of '../../smart_pagination/pagination.dart';
 
 class ErrorDisplay extends StatelessWidget {
   const ErrorDisplay({super.key, required this.exception});

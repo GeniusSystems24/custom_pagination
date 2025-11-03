@@ -13,7 +13,7 @@ class GridViewScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('GridView Pagination'),
       ),
-      body: SinglePaginatedGridView<Product>(
+      body: SmartPaginatedGridView<Product>(
         request: const PaginationRequest(page: 1, pageSize: 20),
         provider: PaginationProvider.future(
           (request) => MockApiService.fetchProducts(request),

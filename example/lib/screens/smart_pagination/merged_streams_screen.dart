@@ -35,7 +35,7 @@ class MergedStreamsScreen extends StatelessWidget {
           ),
           _buildStreamBadges(),
           Expanded(
-            child: SinglePagination<Product>(
+            child: SmartPagination<Product>(
               request: const PaginationRequest(page: 1, pageSize: 15),
               provider: PaginationProvider.mergeStreams(
                 (request) => [

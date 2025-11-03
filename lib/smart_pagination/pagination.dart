@@ -24,7 +24,7 @@ part '../core/widget/initial_loader.dart';
 part 'widgets/paginate_api_view.dart';
 part 'controller/scroll_to_message_mixin.dart';
 
-class SinglePagination<T> extends StatefulWidget {
+class SmartPagination<T> extends StatefulWidget {
   final Widget bottomLoader;
   final double? heightOfInitialLoadingAndEmptyWidget;
   final SliverGridDelegate gridDelegate;
@@ -45,22 +45,22 @@ class SinglePagination<T> extends StatefulWidget {
   final void Function(int)? onPageChanged;
   final Widget emptyWidget;
   final Widget loadingWidget;
-  final List<SinglePaginationChangeListener>? listeners;
+  final List<SmartPaginationChangeListener>? listeners;
   final ListBuilder<T>? listBuilder;
   final ScrollController? scrollController;
-  final SinglePaginationCubit<T> cubit;
-  final SinglePaginationLoaded<T> Function(SinglePaginationLoaded<T> state)? beforeBuild;
+  final SmartPaginationCubit<T> cubit;
+  final SmartPaginationLoaded<T> Function(SmartPaginationLoaded<T> state)? beforeBuild;
   final double? cacheExtent;
 
   final Widget Function(Exception exception)? onError;
 
-  final void Function(SinglePaginationLoaded<T> loader)? onReachedEnd;
+  final void Function(SmartPaginationLoaded<T> loader)? onReachedEnd;
 
-  final void Function(SinglePaginationLoaded<T> loader)? onLoaded;
+  final void Function(SmartPaginationLoaded<T> loader)? onLoaded;
 
   final bool internalCubit;
 
-  SinglePagination({
+  SmartPagination({
     super.key,
     required PaginationRequest request,
     required PaginationProvider<T> provider,
@@ -96,10 +96,10 @@ class SinglePagination<T> extends StatefulWidget {
     Logger? logger,
     int maxPagesInMemory = 5,
     RetryConfig? retryConfig,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : internalCubit = true,
-       cubit = SinglePaginationCubit<T>(
+       cubit = SmartPaginationCubit<T>(
          request: request,
          provider: provider,
          listBuilder: listBuilder,
@@ -114,7 +114,7 @@ class SinglePagination<T> extends StatefulWidget {
            ? [if (refreshListener != null) refreshListener, ...?filterListeners]
            : null;
 
-  SinglePagination.cubit({
+  SmartPagination.cubit({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -144,8 +144,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.beforeBuild,
     this.listBuilder,
     this.cacheExtent,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : internalCubit = false,
        listeners = refreshListener != null || filterListeners?.isNotEmpty == true
            ? [if (refreshListener != null) refreshListener, ...?filterListeners]
@@ -153,7 +153,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a Column layout (non-scrollable)
   /// Similar to PaginatorColumn
-  SinglePagination.column({
+  SmartPagination.column({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -172,8 +172,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.allowImplicitScrolling = false,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.listView,
        gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
        separator = separator ?? SizedBox(height: spacing),
@@ -194,7 +194,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a GridView layout
   /// Similar to PaginatorGridView
-  SinglePagination.gridView({
+  SmartPagination.gridView({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -221,8 +221,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.cacheExtent,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.gridView,
        separator = separator ?? SizedBox(height: spacing),
        staggeredAxisDirection = null,
@@ -235,7 +235,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a ListView layout
   /// Similar to PaginatorListView
-  SinglePagination.listView({
+  SmartPagination.listView({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -261,8 +261,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.cacheExtent,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.listView,
        gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
        separator = separator ?? (scrollDirection == Axis.horizontal ? SizedBox(width: spacing) : SizedBox(height: spacing)),
@@ -276,7 +276,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a PageView layout
   /// Similar to PaginatorPageView
-  SinglePagination.pageView({
+  SmartPagination.pageView({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -302,8 +302,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.listBuilder,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.pageView,
        gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
        separator = separator ?? (scrollDirection == Axis.horizontal ? SizedBox(width: spacing) : SizedBox(height: spacing)),
@@ -317,7 +317,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a StaggeredGridView layout
   /// Similar to PaginatorFirestoreStaggeredGridView
-  SinglePagination.staggeredGridView({
+  SmartPagination.staggeredGridView({
     super.key,
     required this.cubit,
     required StaggeredGridTile Function(BuildContext context, List<T> documents, int index) this.itemBuilder,
@@ -345,8 +345,8 @@ class SinglePagination<T> extends StatefulWidget {
     double crossAxisSpacing = 4.0,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.staggeredGridView,
        gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
          crossAxisCount: crossAxisCount,
@@ -365,7 +365,7 @@ class SinglePagination<T> extends StatefulWidget {
 
   /// Creates a pagination widget as a Row layout (horizontal non-scrollable)
   /// Similar to PaginatorRow
-  SinglePagination.row({
+  SmartPagination.row({
     super.key,
     required this.cubit,
     required this.itemBuilder,
@@ -387,8 +387,8 @@ class SinglePagination<T> extends StatefulWidget {
     this.cacheExtent,
     Widget? separator,
     double spacing = 4,
-    SinglePaginationRefreshedChangeListener? refreshListener,
-    List<SinglePaginationFilterChangeListener<T>>? filterListeners,
+    SmartPaginationRefreshedChangeListener? refreshListener,
+    List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.listView,
        gridDelegate = const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
        separator = separator ?? SizedBox(width: spacing),
@@ -405,25 +405,25 @@ class SinglePagination<T> extends StatefulWidget {
            : null;
 
   @override
-  State<SinglePagination<T>> createState() => _SinglePaginationState<T>();
+  State<SmartPagination<T>> createState() => _SmartPaginationState<T>();
 }
 
-class _SinglePaginationState<T> extends State<SinglePagination<T>> {
+class _SmartPaginationState<T> extends State<SmartPagination<T>> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SinglePaginationCubit<T>, SinglePaginationState<T>>(
+    return BlocBuilder<SmartPaginationCubit<T>, SmartPaginationState<T>>(
       bloc: widget.cubit,
       builder: (context, state) {
         if (!widget.cubit.didFetch) widget.cubit.fetchPaginatedList();
-        if (state is SinglePaginationInitial<T>) {
+        if (state is SmartPaginationInitial<T>) {
           return _buildWithScrollView(context, widget.loadingWidget);
-        } else if (state is SinglePaginationError<T>) {
+        } else if (state is SmartPaginationError<T>) {
           return _buildWithScrollView(
             context,
             (widget.onError != null) ? widget.onError!(state.error) : ErrorDisplay(exception: state.error),
           );
         } else {
-          final loadedState = state as SinglePaginationLoaded<T>;
+          final loadedState = state as SmartPaginationLoaded<T>;
           if (widget.onLoaded != null) {
             widget.onLoaded!(loadedState);
           }
@@ -495,13 +495,13 @@ class _SinglePaginationState<T> extends State<SinglePagination<T>> {
   void initState() {
     if (widget.listeners != null) {
       for (var listener in widget.listeners!) {
-        if (listener is SinglePaginationRefreshedChangeListener) {
+        if (listener is SmartPaginationRefreshedChangeListener) {
           listener.addListener(() {
             if (listener.refreshed) {
               widget.cubit.refreshPaginatedList();
             }
           });
-        } else if (listener is SinglePaginationFilterChangeListener<T>) {
+        } else if (listener is SmartPaginationFilterChangeListener<T>) {
           listener.addListener(() {
             if (listener.searchTerm != null) {
               widget.cubit.filterPaginatedList(listener.searchTerm);

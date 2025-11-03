@@ -45,7 +45,7 @@ class PaginateApiView<T> extends StatelessWidget {
     this.cacheExtent,
   });
 
-  final SinglePaginationLoaded<T> loadedState;
+  final SmartPaginationLoaded<T> loadedState;
 
   final double? heightOfInitialLoadingAndEmptyWidget;
   final SliverGridDelegate gridDelegate;

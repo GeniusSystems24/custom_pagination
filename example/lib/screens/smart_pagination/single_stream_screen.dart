@@ -33,7 +33,7 @@ class SingleStreamScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: SinglePagination<Product>(
+            child: SmartPagination<Product>(
               request: const PaginationRequest(page: 1, pageSize: 15),
               provider: PaginationProvider.stream(
                 (request) => MockApiService.productsStream(request),

@@ -1,7 +1,7 @@
 part of '../core.dart';
 
 /// Base interface for pagination change listeners that provides common functionality
-/// for both SinglePagination and DualPagination listeners.
+/// for both SmartPagination and DualPagination listeners.
 abstract class IPaginationChangeListener {
   /// Notifies listeners that a change has occurred.
   void notifyListeners();

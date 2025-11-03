@@ -1,7 +1,7 @@
 part of '../pagination.dart';
 
 /// Signature for a function that scrolls the pagination list to a specific item ID.
-typedef SinglePaginationScrollToItem =
+typedef SmartPaginationScrollToItem =
     Future<bool> Function(
       String itemId, {
       Duration duration,
@@ -11,7 +11,7 @@ typedef SinglePaginationScrollToItem =
     });
 
 /// Signature for a function that scrolls the pagination list to a specific index.
-typedef SinglePaginationScrollToIndex =
+typedef SmartPaginationScrollToIndex =
     Future<bool> Function(
       int index, {
       Duration duration,
@@ -20,20 +20,20 @@ typedef SinglePaginationScrollToIndex =
       double offset,
     });
 
-/// A mixin for [SinglePaginationController] implementations that adds programmatic
+/// A mixin for [SmartPaginationController] implementations that adds programmatic
 /// scrolling capabilities.
 ///
 /// The actual scrolling logic is provided by the UI layer (e.g., `PaginateApiView`)
 /// via the [attachScrollMethods] function.
-mixin SinglePaginationScrollToItemMixin {
-  SinglePaginationScrollToItem? _scrollToItem;
-  SinglePaginationScrollToIndex? _scrollToIndex;
+mixin SmartPaginationScrollToItemMixin {
+  SmartPaginationScrollToItem? _scrollToItem;
+  SmartPaginationScrollToIndex? _scrollToIndex;
 
   /// Attaches the scroll methods that will be used for scrolling operations.
   /// This is called automatically by PaginateApiView.
   void attachScrollMethods({
-    required SinglePaginationScrollToItem scrollToItem,
-    required SinglePaginationScrollToIndex scrollToIndex,
+    required SmartPaginationScrollToItem scrollToItem,
+    required SmartPaginationScrollToIndex scrollToIndex,
   }) {
     _scrollToItem = scrollToItem;
     _scrollToIndex = scrollToIndex;
@@ -60,7 +60,7 @@ mixin SinglePaginationScrollToItemMixin {
       return Future.value(false);
     }
 
-    return (_scrollToItem as SinglePaginationScrollToItem)(
+    return (_scrollToItem as SmartPaginationScrollToItem)(
       itemPath,
       duration: duration,
       curve: curve,
@@ -84,7 +84,7 @@ mixin SinglePaginationScrollToItemMixin {
       return Future.value(false);
     }
 
-    return (_scrollToIndex as SinglePaginationScrollToIndex)(
+    return (_scrollToIndex as SmartPaginationScrollToIndex)(
       index,
       duration: duration,
       curve: curve,
@@ -93,7 +93,7 @@ mixin SinglePaginationScrollToItemMixin {
     );
   }
 
-  /// Disposes scroll resources. This should be called in the SinglePaginationController's dispose method.
+  /// Disposes scroll resources. This should be called in the SmartPaginationController's dispose method.
   void disposeScrollMethods() {
     detachScrollMethods();
   }

@@ -1,13 +1,13 @@
 part of '../core.dart';
 
 /// Base interface for pagination states that provides common functionality
-/// for both SinglePagination and DualPagination states.
+/// for both SmartPagination and DualPagination states.
 abstract class IPaginationState<T> {
   PaginationMeta? get meta;
 }
 
 /// Base interface for pagination states that provides common functionality
-/// for both SinglePagination and DualPagination states.
+/// for both SmartPagination and DualPagination states.
 abstract class IPaginationInitialState<T> extends IPaginationState<T> {
   /// Whether the pagination has reached the end of available data.
   bool get hasReachedEnd;

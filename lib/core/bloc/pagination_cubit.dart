@@ -1,7 +1,7 @@
 part of '../core.dart';
 
 /// Base interface for pagination cubits that provides common functionality
-/// for both SinglePagination and DualPagination cubits.
+/// for both SmartPagination and DualPagination cubits.
 abstract class IPaginationCubit<T, StateType extends IPaginationState<T>>
     extends Cubit<StateType> {
   IPaginationCubit(super.initialState);
