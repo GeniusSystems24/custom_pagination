@@ -1,4 +1,4 @@
-part of '../../smart_pagination/pagination.dart';
+part of '../../pagination.dart';
 
 class EmptyDisplay extends StatelessWidget {
   const EmptyDisplay({super.key});

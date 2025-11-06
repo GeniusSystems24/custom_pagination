@@ -1,4 +1,4 @@
-part of '../data.dart';
+part of '../../pagination.dart';
 
 /// Metadata describing the state of a paginated response.
 ///

@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import '../../core/core.dart';
-import '../../data/data.dart';
-import '../pagination.dart';
+part of '../../pagination.dart';
 
 /// A convenience widget for creating a paginated GridView.
 ///
@@ -83,7 +80,8 @@ class SmartPaginatedGridView<T> extends StatelessWidget {
     BuildContext context,
     Exception exception,
     VoidCallback retryCallback,
-  )? errorBuilder;
+  )?
+  errorBuilder;
 
   /// Optional builder for initial loading state.
   final Widget Function(BuildContext context)? initialLoadingBuilder;
@@ -119,15 +117,15 @@ class SmartPaginatedGridView<T> extends StatelessWidget {
       provider: provider,
       itemBuilderType: PaginateBuilderType.gridView,
       gridDelegate: gridDelegate,
-      itemBuilder: (context, items, index) => childBuilder(context, items[index], index),
+      itemBuilder: (context, items, index) =>
+          childBuilder(context, items[index], index),
       emptyWidget: emptyBuilder?.call(context) ?? const EmptyDisplay(),
-      loadingWidget: initialLoadingBuilder?.call(context) ?? const InitialLoader(),
+      loadingWidget:
+          initialLoadingBuilder?.call(context) ?? const InitialLoader(),
       bottomLoader: bottomLoadingBuilder?.call(context) ?? const BottomLoader(),
       onError: errorBuilder != null
-          ? (exception) => _ErrorWrapper(
-                exception: exception,
-                errorBuilder: errorBuilder!,
-              )
+          ? (exception) =>
+                _ErrorWrapper(exception: exception, errorBuilder: errorBuilder!)
           : null,
       retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
@@ -141,17 +139,15 @@ class SmartPaginatedGridView<T> extends StatelessWidget {
 }
 
 class _ErrorWrapper extends StatelessWidget {
-  const _ErrorWrapper({
-    required this.exception,
-    required this.errorBuilder,
-  });
+  const _ErrorWrapper({required this.exception, required this.errorBuilder});
 
   final Exception exception;
   final Widget Function(
     BuildContext context,
     Exception exception,
     VoidCallback retryCallback,
-  ) errorBuilder;
+  )
+  errorBuilder;
 
   @override
   Widget build(BuildContext context) {

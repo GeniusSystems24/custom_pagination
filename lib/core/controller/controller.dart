@@ -1,4 +1,4 @@
-part of '../core.dart';
+part of '../../pagination.dart';
 
 /// Base interface for pagination controllers that provides common functionality
 /// for both SmartPagination and DualPagination controllers.

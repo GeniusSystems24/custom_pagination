@@ -1,4 +1,4 @@
-part of '../data.dart';
+part of '../../pagination.dart';
 
 /// Lightweight request descriptor used by the pagination cubit.
 ///

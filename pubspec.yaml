@@ -24,16 +24,14 @@ dependencies:
   scrollview_observer: ^1.26.2
 
 dev_dependencies:
-  bloc_test: ^9.1.5
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.1
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
-flutter: null
+# flutter: null
 
 # To add assets to your package, add an assets section, like this:
 # assets:

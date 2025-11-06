@@ -1,7 +1,4 @@
-import 'package:custom_pagination/core/core.dart';
-import 'package:flutter/material.dart';
-import '../../data/data.dart';
-import '../pagination.dart';
+part of '../../pagination.dart';
 
 /// A convenience widget for creating a paginated ListView.
 ///
@@ -81,7 +78,8 @@ class SmartPaginatedListView<T> extends StatelessWidget {
     BuildContext context,
     Exception exception,
     VoidCallback retryCallback,
-  )? errorBuilder;
+  )?
+  errorBuilder;
 
   /// Optional builder for initial loading state.
   final Widget Function(BuildContext context)? initialLoadingBuilder;
@@ -116,18 +114,20 @@ class SmartPaginatedListView<T> extends StatelessWidget {
       request: request,
       provider: provider,
       itemBuilderType: PaginateBuilderType.listView,
-      itemBuilder: (context, items, index) => childBuilder(context, items[index], index),
+      itemBuilder: (context, items, index) =>
+          childBuilder(context, items[index], index),
       separator: separatorBuilder != null
           ? _SeparatorBuilder(separatorBuilder!)
           : const EmptySeparator(),
       emptyWidget: emptyBuilder?.call(context) ?? const EmptyDisplay(),
-      loadingWidget: initialLoadingBuilder?.call(context) ?? const InitialLoader(),
+      loadingWidget:
+          initialLoadingBuilder?.call(context) ?? const InitialLoader(),
       bottomLoader: bottomLoadingBuilder?.call(context) ?? const BottomLoader(),
       onError: errorBuilder != null
           ? (exception) => _ErrorWrapper(
-                exception: exception,
-                errorBuilder: errorBuilder!,
-              )
+              exception: exception,
+              errorBuilder: errorBuilder!,
+            )
           : null,
       retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
@@ -152,22 +152,4 @@ class _SeparatorBuilder extends StatelessWidget {
   }
 }
 
-class _ErrorWrapper extends StatelessWidget {
-  const _ErrorWrapper({
-    required this.exception,
-    required this.errorBuilder,
-  });
 
-  final Exception exception;
-  final Widget Function(
-    BuildContext context,
-    Exception exception,
-    VoidCallback retryCallback,
-  ) errorBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    // The retry callback will be provided by the pagination cubit
-    return errorBuilder(context, exception, () {});
-  }
-}

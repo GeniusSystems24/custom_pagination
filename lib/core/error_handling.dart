@@ -1,4 +1,4 @@
-import 'dart:async';
+part of '../pagination.dart';
 
 /// Configuration for retry behavior.
 ///

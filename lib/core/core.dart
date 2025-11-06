@@ -1,19 +1,6 @@
-import 'dart:async';
+part of '../pagination.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
 
-import '../data/data.dart';
-
-// Export error handling utilities
-export 'error_handling.dart';
-
-// Core interfaces for pagination system
-part 'bloc/pagination_cubit.dart';
-part 'bloc/pagination_listeners.dart';
-part 'bloc/pagination_state.dart';
-part 'controller/controller.dart';
 
 typedef WhereChecker<T> = bool Function(T item);
 typedef CompareBy<T> = int Function(T a, T b);
