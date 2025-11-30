@@ -1,4 +1,4 @@
-part of '../../smart_pagination/pagination.dart';
+part of '../../pagination.dart';
 
 class EmptySeparator extends StatelessWidget {
   const EmptySeparator({super.key});

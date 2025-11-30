@@ -1,4 +1,4 @@
-part of '../pagination.dart';
+part of '../../pagination.dart';
 
 @immutable
 abstract class SmartPaginationState<T> implements IPaginationInitialState<T> {

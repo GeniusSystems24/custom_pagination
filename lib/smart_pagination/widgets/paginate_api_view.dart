@@ -1,4 +1,4 @@
-part of '../pagination.dart';
+part of '../../pagination.dart';
 
 enum PaginateBuilderType {
   /// Paginate as a ListView
@@ -38,7 +38,7 @@ class PaginateApiView<T> extends StatelessWidget {
     this.reverse = false,
     this.scrollDirection = Axis.vertical,
     this.staggeredAxisDirection,
-    this.padding = const EdgeInsetsGeometry.all(0),
+    this.padding = const EdgeInsets.all(0),
     this.physics,
     this.scrollController,
     this.allowImplicitScrolling = false,
@@ -294,7 +294,7 @@ class PaginateApiView<T> extends StatelessWidget {
     }
 
     return ReorderableListView.builder(
-      padding: padding,
+      padding: padding is EdgeInsets ? padding as EdgeInsets : null,
       reverse: reverse,
       scrollController: scrollController,
       shrinkWrap: shrinkWrap,
@@ -315,8 +315,8 @@ class PaginateApiView<T> extends StatelessWidget {
           animation: animation,
           builder: (BuildContext context, Widget? child) {
             final double animValue = Curves.easeInOut.transform(animation.value);
-            final double elevation = lerpDouble(0, 6, animValue)!;
-            final double scale = lerpDouble(1, 1.02, animValue)!;
+            final double elevation = lerpDouble(0, 6, animValue) ?? 0;
+            final double scale = lerpDouble(1, 1.02, animValue) ?? 1;
             return Transform.scale(
               scale: scale,
               child: Card(

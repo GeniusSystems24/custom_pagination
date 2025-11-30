@@ -39,6 +39,7 @@ library;
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +124,40 @@ class SmartPagination<T> extends StatefulWidget {
   )?
   customViewBuilder;
 
+  /// Callback for reordering items in ReorderableListView
+  /// Only used when itemBuilderType is PaginateBuilderType.reorderableListView
+  final void Function(int oldIndex, int newIndex)? onReorder;
+
+  // ========== State Separation Builders ==========
+
+  /// Builder for first page loading state
+  /// If not provided, falls back to [loadingWidget]
+  final Widget Function(BuildContext context)? firstPageLoadingBuilder;
+
+  /// Builder for first page error state with retry capability
+  /// If not provided, falls back to [onError]
+  final Widget Function(BuildContext context, Exception error, VoidCallback retry)? firstPageErrorBuilder;
+
+  /// Builder for first page empty state (no items found)
+  /// If not provided, falls back to [emptyWidget]
+  final Widget Function(BuildContext context)? firstPageEmptyBuilder;
+
+  /// Builder for load more loading indicator
+  /// If not provided, falls back to [bottomLoader]
+  final Widget Function(BuildContext context)? loadMoreLoadingBuilder;
+
+  /// Builder for load more error state with retry capability
+  final Widget Function(BuildContext context, Exception error, VoidCallback retry)? loadMoreErrorBuilder;
+
+  /// Builder for end of list indicator (no more items to load)
+  final Widget Function(BuildContext context)? loadMoreNoMoreItemsBuilder;
+
+  // ========== Performance Options ==========
+
+  /// Number of items before the end that triggers loading more items
+  /// Default is 3 - starts loading when user is 3 items away from the end
+  final int invisibleItemsThreshold;
+
   SmartPagination({
     super.key,
     required PaginationRequest request,
@@ -157,6 +192,16 @@ class SmartPagination<T> extends StatefulWidget {
     this.listBuilder,
     this.cacheExtent,
     this.customViewBuilder,
+    this.onReorder,
+    // State Separation Builders
+    this.firstPageLoadingBuilder,
+    this.firstPageErrorBuilder,
+    this.firstPageEmptyBuilder,
+    this.loadMoreLoadingBuilder,
+    this.loadMoreErrorBuilder,
+    this.loadMoreNoMoreItemsBuilder,
+    // Performance Options
+    this.invisibleItemsThreshold = 3,
     OnInsertionCallback<T>? onInsertionCallback,
     VoidCallback? onClear,
     Logger? logger,
@@ -214,6 +259,16 @@ class SmartPagination<T> extends StatefulWidget {
     this.listBuilder,
     this.cacheExtent,
     this.customViewBuilder,
+    this.onReorder,
+    // State Separation Builders
+    this.firstPageLoadingBuilder,
+    this.firstPageErrorBuilder,
+    this.firstPageEmptyBuilder,
+    this.loadMoreLoadingBuilder,
+    this.loadMoreErrorBuilder,
+    this.loadMoreNoMoreItemsBuilder,
+    // Performance Options
+    this.invisibleItemsThreshold = 3,
     SmartPaginationRefreshedChangeListener? refreshListener,
     List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : internalCubit = false,
@@ -261,7 +316,14 @@ class SmartPagination<T> extends StatefulWidget {
        onPageChanged = null,
        cacheExtent = null,
        customViewBuilder = null,
-       //  customViewBuilder = null,
+       onReorder = null,
+       firstPageLoadingBuilder = null,
+       firstPageErrorBuilder = null,
+       firstPageEmptyBuilder = null,
+       loadMoreLoadingBuilder = null,
+       loadMoreErrorBuilder = null,
+       loadMoreNoMoreItemsBuilder = null,
+       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -307,6 +369,14 @@ class SmartPagination<T> extends StatefulWidget {
        pageController = null,
        onPageChanged = null,
        customViewBuilder = null,
+       onReorder = null,
+       firstPageLoadingBuilder = null,
+       firstPageErrorBuilder = null,
+       firstPageEmptyBuilder = null,
+       loadMoreLoadingBuilder = null,
+       loadMoreErrorBuilder = null,
+       loadMoreNoMoreItemsBuilder = null,
+       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -341,6 +411,15 @@ class SmartPagination<T> extends StatefulWidget {
     this.cacheExtent,
     Widget? separator,
     double spacing = 4,
+    // State Separation Builders
+    this.firstPageLoadingBuilder,
+    this.firstPageErrorBuilder,
+    this.firstPageEmptyBuilder,
+    this.loadMoreLoadingBuilder,
+    this.loadMoreErrorBuilder,
+    this.loadMoreNoMoreItemsBuilder,
+    // Performance Options
+    this.invisibleItemsThreshold = 3,
     SmartPaginationRefreshedChangeListener? refreshListener,
     List<SmartPaginationFilterChangeListener<T>>? filterListeners,
   }) : itemBuilderType = PaginateBuilderType.listView,
@@ -356,6 +435,7 @@ class SmartPagination<T> extends StatefulWidget {
        pageController = null,
        onPageChanged = null,
        customViewBuilder = null,
+       onReorder = null,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -405,6 +485,14 @@ class SmartPagination<T> extends StatefulWidget {
        scrollController = null,
        cacheExtent = null,
        customViewBuilder = null,
+       onReorder = null,
+       firstPageLoadingBuilder = null,
+       firstPageErrorBuilder = null,
+       firstPageEmptyBuilder = null,
+       loadMoreLoadingBuilder = null,
+       loadMoreErrorBuilder = null,
+       loadMoreNoMoreItemsBuilder = null,
+       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -460,6 +548,14 @@ class SmartPagination<T> extends StatefulWidget {
        onPageChanged = null,
        cacheExtent = null,
        customViewBuilder = null,
+       onReorder = null,
+       firstPageLoadingBuilder = null,
+       firstPageErrorBuilder = null,
+       firstPageEmptyBuilder = null,
+       loadMoreLoadingBuilder = null,
+       loadMoreErrorBuilder = null,
+       loadMoreNoMoreItemsBuilder = null,
+       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -505,6 +601,14 @@ class SmartPagination<T> extends StatefulWidget {
        pageController = null,
        onPageChanged = null,
        customViewBuilder = null,
+       onReorder = null,
+       firstPageLoadingBuilder = null,
+       firstPageErrorBuilder = null,
+       firstPageEmptyBuilder = null,
+       loadMoreLoadingBuilder = null,
+       loadMoreErrorBuilder = null,
+       loadMoreNoMoreItemsBuilder = null,
+       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners =
            refreshListener != null || filterListeners?.isNotEmpty == true
@@ -523,14 +627,24 @@ class _SmartPaginationState<T> extends State<SmartPagination<T>> {
       builder: (context, state) {
         if (!widget.cubit.didFetch) widget.cubit.fetchPaginatedList();
         if (state is SmartPaginationInitial<T>) {
-          return _buildWithScrollView(context, widget.loadingWidget);
+          // Use firstPageLoadingBuilder if provided, otherwise fallback to loadingWidget
+          final loadingWidget = widget.firstPageLoadingBuilder?.call(context) ?? widget.loadingWidget;
+          return _buildWithScrollView(context, loadingWidget);
         } else if (state is SmartPaginationError<T>) {
-          return _buildWithScrollView(
-            context,
-            (widget.onError != null)
-                ? widget.onError!(state.error)
-                : ErrorDisplay(exception: state.error),
-          );
+          // Use firstPageErrorBuilder if provided with retry callback
+          Widget errorWidget;
+          if (widget.firstPageErrorBuilder != null) {
+            errorWidget = widget.firstPageErrorBuilder!(
+              context,
+              state.error,
+              () => widget.cubit.fetchPaginatedList(), // Retry callback
+            );
+          } else if (widget.onError != null) {
+            errorWidget = widget.onError!(state.error);
+          } else {
+            errorWidget = ErrorDisplay(exception: state.error);
+          }
+          return _buildWithScrollView(context, errorWidget);
         } else {
           final loadedState = state as SmartPaginationLoaded<T>;
           if (widget.onLoaded != null) {
@@ -544,7 +658,9 @@ class _SmartPaginationState<T> extends State<SmartPagination<T>> {
               widget.beforeBuild?.call(loadedState) ?? loadedState;
 
           if (beforeBuildState.items.isEmpty) {
-            return _buildWithScrollView(context, widget.emptyWidget);
+            // Use firstPageEmptyBuilder if provided, otherwise fallback to emptyWidget
+            final emptyWidget = widget.firstPageEmptyBuilder?.call(context) ?? widget.emptyWidget;
+            return _buildWithScrollView(context, emptyWidget);
           }
 
           final view = PaginateApiView(
@@ -572,6 +688,14 @@ class _SmartPaginationState<T> extends State<SmartPagination<T>> {
             fetchPaginatedList: widget.cubit.fetchPaginatedList,
             cacheExtent: widget.cacheExtent,
             customViewBuilder: widget.customViewBuilder,
+            onReorder: widget.onReorder,
+            // State Separation Builders
+            loadMoreLoadingBuilder: widget.loadMoreLoadingBuilder,
+            loadMoreErrorBuilder: widget.loadMoreErrorBuilder,
+            loadMoreNoMoreItemsBuilder: widget.loadMoreNoMoreItemsBuilder,
+            // Performance
+            invisibleItemsThreshold: widget.invisibleItemsThreshold,
+            retryLoadMore: widget.cubit.fetchPaginatedList,
           );
 
           if (widget.listeners != null && widget.listeners!.isNotEmpty) {

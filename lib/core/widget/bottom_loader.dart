@@ -1,4 +1,4 @@
-part of '../../smart_pagination/pagination.dart';
+part of '../../pagination.dart';
 
 class BottomLoader extends StatelessWidget {
   const BottomLoader({super.key});
