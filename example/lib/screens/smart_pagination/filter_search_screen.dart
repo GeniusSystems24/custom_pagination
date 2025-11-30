@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:custom_pagination/pagination.dart';
 import '../../models/product.dart';
 import '../../services/mock_api_service.dart';
+import '../../widgets/product_card.dart';
 
 /// Filter and search example
 class FilterSearchScreen extends StatefulWidget {
@@ -118,7 +119,10 @@ class _FilterSearchScreenState extends State<FilterSearchScreen> {
                 },
               ),
               childBuilder: (context, product, index) {
-                return _buildProductCard(product);
+                return ProductCard(
+                  product: product,
+                  searchQuery: _searchQuery,
+                );
               },
               separatorBuilder: (context, index) => const Divider(height: 1),
 
@@ -402,110 +406,6 @@ class _FilterSearchScreenState extends State<FilterSearchScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildProductCard(Product product) {
-    // Highlight search query in product name
-    final name = product.name;
-    final lowerName = name.toLowerCase();
-    final lowerQuery = _searchQuery.toLowerCase();
-    final queryIndex = lowerName.indexOf(lowerQuery);
-
-    Widget titleWidget;
-    if (_searchQuery.isNotEmpty && queryIndex != -1) {
-      final before = name.substring(0, queryIndex);
-      final match = name.substring(queryIndex, queryIndex + _searchQuery.length);
-      final after = name.substring(queryIndex + _searchQuery.length);
-
-      titleWidget = RichText(
-        text: TextSpan(
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.black,
-          ),
-          children: [
-            TextSpan(text: before),
-            TextSpan(
-              text: match,
-              style: const TextStyle(
-                backgroundColor: Colors.yellow,
-              ),
-            ),
-            TextSpan(text: after),
-          ],
-        ),
-      );
-    } else {
-      titleWidget = Text(
-        name,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      );
-    }
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          product.imageUrl,
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              width: 60,
-              height: 60,
-              color: Colors.grey[300],
-              child: const Icon(Icons.image_not_supported),
-            );
-          },
-        ),
-      ),
-      title: titleWidget,
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 4),
-          Text(
-            product.description,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              product.category,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.blue,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-      trailing: Text(
-        '\$${product.price.toStringAsFixed(2)}',
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.green,
-        ),
       ),
     );
   }
