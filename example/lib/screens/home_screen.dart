@@ -21,6 +21,15 @@ import 'smart_pagination/state_separation_screen.dart';
 import 'smart_pagination/smart_preloading_screen.dart';
 import 'smart_pagination/custom_error_handling_screen.dart';
 
+// Error handling examples
+import 'errors/basic_error_example.dart';
+import 'errors/network_errors_example.dart';
+import 'errors/retry_patterns_example.dart';
+import 'errors/custom_error_widgets_example.dart';
+import 'errors/error_recovery_example.dart';
+import 'errors/graceful_degradation_example.dart';
+import 'errors/load_more_errors_example.dart';
+
 /// Home screen with navigation to all example screens
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -225,6 +234,71 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.error_outline,
             color: Colors.red,
             onTap: () => _navigate(context, const CustomErrorHandlingScreen()),
+          ),
+          const SizedBox(height: 32),
+          _buildHeader('Error Handling Examples'),
+          const SizedBox(height: 16),
+          _buildExampleCard(
+            context,
+            title: 'Basic Error Handling',
+            description: 'Simple error display with retry functionality',
+            icon: Icons.error,
+            color: Colors.red,
+            onTap: () => _navigate(context, const BasicErrorExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Network Errors',
+            description: 'Different network error types (timeout, 404, 500, etc.)',
+            icon: Icons.wifi_off,
+            color: Colors.orange,
+            onTap: () => _navigate(context, const NetworkErrorsExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Retry Patterns',
+            description: 'Manual, auto, exponential backoff, and limited retries',
+            icon: Icons.autorenew,
+            color: Colors.blue,
+            onTap: () => _navigate(context, const RetryPatternsExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Custom Error Widgets',
+            description: 'All pre-built error widget styles and customization',
+            icon: Icons.widgets,
+            color: Colors.purple,
+            onTap: () => _navigate(context, const CustomErrorWidgetsExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Error Recovery',
+            description: 'Cached data, partial data, fallback strategies',
+            icon: Icons.restore,
+            color: Colors.green,
+            onTap: () => _navigate(context, const ErrorRecoveryExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Graceful Degradation',
+            description: 'Offline mode, placeholders, and limited features',
+            icon: Icons.layers,
+            color: Colors.amber,
+            onTap: () => _navigate(context, const GracefulDegradationExample()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Load More Errors',
+            description: 'Handle errors while loading additional pages',
+            icon: Icons.expand_more,
+            color: Colors.indigo,
+            onTap: () => _navigate(context, const LoadMoreErrorsExample()),
           ),
         ],
       ),
