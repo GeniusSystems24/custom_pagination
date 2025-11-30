@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../pagination.dart';
 
 class SmartPaginationCubit<T>
     extends IPaginationListCubit<T, SmartPaginationState<T>> {

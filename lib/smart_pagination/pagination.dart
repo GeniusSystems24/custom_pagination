@@ -261,15 +261,6 @@ class SmartPagination<T> extends StatefulWidget {
        loadMoreErrorBuilder = null,
        loadMoreNoMoreItemsBuilder = null,
        invisibleItemsThreshold = 3,
-       customViewBuilder = null,
-       onReorder = null,
-       firstPageLoadingBuilder = null,
-       firstPageErrorBuilder = null,
-       firstPageEmptyBuilder = null,
-       loadMoreLoadingBuilder = null,
-       loadMoreErrorBuilder = null,
-       loadMoreNoMoreItemsBuilder = null,
-       invisibleItemsThreshold = 3,
        internalCubit = false,
        listeners = refreshListener != null || filterListeners?.isNotEmpty == true
            ? [if (refreshListener != null) refreshListener, ...?filterListeners]

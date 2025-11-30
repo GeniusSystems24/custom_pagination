@@ -1,7 +1,3 @@
-part of '../pagination.dart';
-
-
-
 typedef WhereChecker<T> = bool Function(T item);
 typedef CompareBy<T> = int Function(T a, T b);
 typedef OnInsertionCallback<T> = void Function(List<T> items);

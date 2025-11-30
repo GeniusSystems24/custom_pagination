@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../pagination.dart';
 
 /// A convenience widget for creating a paginated ListView.
 ///

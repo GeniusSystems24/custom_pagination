@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../pagination.dart';
 
 enum PaginateBuilderType {
   /// Paginate as a ListView

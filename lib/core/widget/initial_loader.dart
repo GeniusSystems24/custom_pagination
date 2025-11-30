@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../../smart_pagination/pagination.dart';
 
 class InitialLoader extends StatelessWidget {
   const InitialLoader({super.key});

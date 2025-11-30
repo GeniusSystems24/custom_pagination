@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../pagination.dart';
 
 /// Signature for a function that scrolls the pagination list to a specific item ID.
 typedef SmartPaginationScrollToItem =

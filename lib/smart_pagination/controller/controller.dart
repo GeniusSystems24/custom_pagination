@@ -1,4 +1,4 @@
-part of '../../pagination.dart';
+part of '../pagination.dart';
 
 class SmartPaginationController<T>
     with PaginationScrollToItemMixin
