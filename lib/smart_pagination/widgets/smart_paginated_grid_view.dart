@@ -155,10 +155,6 @@ class SmartPaginatedGridView<T> extends StatelessWidget {
       loadingWidget:
           initialLoadingBuilder?.call(context) ?? const InitialLoader(),
       bottomLoader: bottomLoadingBuilder?.call(context) ?? const BottomLoader(),
-      onError: errorBuilder != null
-          ? (exception) =>
-                _ErrorWrapper(exception: exception, errorBuilder: errorBuilder!)
-          : null,
       retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
       reverse: reverse,
@@ -168,30 +164,12 @@ class SmartPaginatedGridView<T> extends StatelessWidget {
       onReachedEnd: onReachedEnd != null ? (_) => onReachedEnd!() : null,
       // New state separation builders
       firstPageLoadingBuilder: firstPageLoadingBuilder,
-      firstPageErrorBuilder: firstPageErrorBuilder,
+      firstPageErrorBuilder: firstPageErrorBuilder ?? errorBuilder,
       firstPageEmptyBuilder: firstPageEmptyBuilder,
       loadMoreLoadingBuilder: loadMoreLoadingBuilder,
       loadMoreErrorBuilder: loadMoreErrorBuilder,
       loadMoreNoMoreItemsBuilder: loadMoreNoMoreItemsBuilder,
       invisibleItemsThreshold: invisibleItemsThreshold,
     );
-  }
-}
-
-class _ErrorWrapper extends StatelessWidget {
-  const _ErrorWrapper({required this.exception, required this.errorBuilder});
-
-  final Exception exception;
-  final Widget Function(
-    BuildContext context,
-    Exception exception,
-    VoidCallback retryCallback,
-  )
-  errorBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    // The retry callback will be provided by the pagination cubit
-    return errorBuilder(context, exception, () {});
   }
 }

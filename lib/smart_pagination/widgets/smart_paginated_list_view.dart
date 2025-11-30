@@ -155,12 +155,6 @@ class SmartPaginatedListView<T> extends StatelessWidget {
       loadingWidget:
           initialLoadingBuilder?.call(context) ?? const InitialLoader(),
       bottomLoader: bottomLoadingBuilder?.call(context) ?? const BottomLoader(),
-      onError: errorBuilder != null
-          ? (exception) => _ErrorWrapper(
-              exception: exception,
-              errorBuilder: errorBuilder!,
-            )
-          : null,
       retryConfig: retryConfig,
       shrinkWrap: shrinkWrap,
       reverse: reverse,
@@ -170,7 +164,7 @@ class SmartPaginatedListView<T> extends StatelessWidget {
       onReachedEnd: onReachedEnd != null ? (_) => onReachedEnd!() : null,
       // New state separation builders
       firstPageLoadingBuilder: firstPageLoadingBuilder,
-      firstPageErrorBuilder: firstPageErrorBuilder,
+      firstPageErrorBuilder: firstPageErrorBuilder ?? errorBuilder,
       firstPageEmptyBuilder: firstPageEmptyBuilder,
       loadMoreLoadingBuilder: loadMoreLoadingBuilder,
       loadMoreErrorBuilder: loadMoreErrorBuilder,

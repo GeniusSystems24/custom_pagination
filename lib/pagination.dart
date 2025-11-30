@@ -53,6 +53,7 @@ part 'core/widget/bottom_loader.dart';
 part 'core/widget/empty_display.dart';
 part 'core/widget/empty_separator.dart';
 part 'core/widget/error_display.dart';
+part 'core/widget/custom_error_builder.dart';
 part 'core/widget/initial_loader.dart';
 part 'smart_pagination/controller/scroll_to_message_mixin.dart';
 part 'core/error_handling.dart';

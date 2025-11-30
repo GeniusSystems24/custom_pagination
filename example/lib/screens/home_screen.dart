@@ -19,6 +19,7 @@ import 'smart_pagination/custom_view_builder_screen.dart';
 import 'smart_pagination/reorderable_list_screen.dart';
 import 'smart_pagination/state_separation_screen.dart';
 import 'smart_pagination/smart_preloading_screen.dart';
+import 'smart_pagination/custom_error_handling_screen.dart';
 
 /// Home screen with navigation to all example screens
 class HomeScreen extends StatelessWidget {
@@ -215,6 +216,15 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.speed,
             color: Colors.deepPurple,
             onTap: () => _navigate(context, const SmartPreloadingScreen()),
+          ),
+          const SizedBox(height: 12),
+          _buildExampleCard(
+            context,
+            title: 'Custom Error Handling',
+            description: 'Multiple error widget styles with retry support',
+            icon: Icons.error_outline,
+            color: Colors.red,
+            onTap: () => _navigate(context, const CustomErrorHandlingScreen()),
           ),
         ],
       ),

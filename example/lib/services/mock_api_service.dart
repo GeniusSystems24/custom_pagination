@@ -35,6 +35,14 @@ class MockApiService {
     'Gaming Mouse',
   ];
 
+  /// Fetch products with guaranteed error (for testing error handling)
+  Future<List<Product>> fetchProductsWithError(
+    PaginationRequest request,
+  ) async {
+    await Future.delayed(_networkDelay);
+    throw Exception('Network error: Unable to connect to server');
+  }
+
   /// Fetch products with pagination
   static Future<List<Product>> fetchProducts(
     PaginationRequest request, {
