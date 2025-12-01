@@ -376,4 +376,4 @@ SmartPagination<Product>(
 
 ---
 
-For more information, visit the [GitHub repository](https://github.com/GeniusSystems24/custom_pagination).
+For more information, visit the [GitHub repository](https://github.com/GeniusSystems24/smart_pagination).
